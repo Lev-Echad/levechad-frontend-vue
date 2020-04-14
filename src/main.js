@@ -12,7 +12,7 @@ Vue.config.productionTip = false
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'TODO-Do-this-by-backend',
+    key: 'TODO-Do-this-by-backend', // stav is genius 
     libraries: 'places', // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'
