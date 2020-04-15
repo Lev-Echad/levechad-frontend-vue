@@ -10,9 +10,11 @@ import * as VueGoogleMaps from 'vue2-google-maps'
 
 Vue.config.productionTip = false
 
+store.dispatch('checkToken')
+
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'TODO-Do-this-by-backend', // stav is genius 
+    key: 'BLABLA', // stav is genius 
     libraries: 'places', // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'

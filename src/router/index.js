@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import AuthGuard from "./auth-guard";
 
 Vue.use(VueRouter)
 
@@ -27,9 +28,20 @@ Vue.use(VueRouter)
     ]
   },
   {
+      name: 'Login',
+      path: "/login",
+      component: () => import("@/views/hamal/Login")
+  
+  },
+  {
     path: "/hamal",
     component: () => import("@/views/hamal/Index"),
+    beforeEnter: AuthGuard,
+    meta: {
+   //   requiresLogged: true
+    },
     children: [
+
       {
           name: 'Hamal',
           path: "",
@@ -39,6 +51,11 @@ Vue.use(VueRouter)
           name: 'HamalVolunteers',
           path: "volunteers",
           component: () => import("@/views/hamal/Volunteers")
+      },
+      {
+          name: 'HamalMatch',
+          path: "match",
+          component: () => import("@/views/hamal/Match")
       },
       {
           name: 'HamalMissions',
