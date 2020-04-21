@@ -1,0 +1,109 @@
+import axios from "axios";
+const state = {
+  helpRequests: [],
+  totalHelpRequests: 0,
+  isLoading: false,
+  options: {
+    page: 1,
+
+  },
+  filters:{
+    status:[],
+    page: 1,
+    pageSize: 4,
+    id: '',
+    areas:[]
+    
+    
+  },
+  areas:''
+};
+const getters = {
+  helpRequests(state) {
+    return state.helpRequests;
+  },
+  totalHelpRequests(state){
+    return state.totalHelpRequests
+  },
+  isLoading(state){
+    return state.isLoading
+  },
+  filters(state){
+    return state.filters
+  },
+  areas(state){
+    return state.areas
+  },
+};
+
+const mutations = {
+  helpRequests(state, payload) {
+    state.helpRequests.length = 0; // Clear contents
+    state.helpRequests.push.apply(state.helpRequests, payload); // Append new contents
+  },
+  totalHelpRequests(state, payload){
+    state.totalHelpRequests = payload
+  },
+  isLoading(state, payload){
+    state.isLoading = payload
+  },
+  areas(state, payload){
+    state.areas = payload
+  }
+
+};
+const actions = {
+  reqAreas(context) {
+    context.commit("isLoading", true)
+    axios
+      .get(context.rootState.baseAPIurl + "/api/areas/"
+      , {
+        headers: {
+          Authorization: "Token " + context.rootState.hamalAuth.accessToken,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+       context.commit("areas", response.data)
+       context.commit("isLoading", false)
+      })
+      .catch((err) => {
+        context.commit("isLoading", false)
+        console.log(err);
+      });
+  },
+  reqHelpRequests(context) {
+    context.commit("isLoading", true)
+    var {status, page, pageSize, id, areas} = context.state.filters
+    axios
+      .get(context.rootState.baseAPIurl + "/api/helprequests/?"
+      +"status__in="+status
+      +"&id="+id
+      +"&page="+page
+      +"&pageSize="+pageSize
+      +"&city__region__in="+areas
+      , {
+        headers: {
+          Authorization: "Token " + context.rootState.hamalAuth.accessToken,
+        },
+      })
+      .then((response) => {
+       context.commit("helpRequests", response.data.results)
+       context.commit("totalHelpRequests", response.data.count)
+       context.commit("isLoading", false)
+        console.log(response);
+      })
+      .catch((err) => {
+        context.commit("isLoading", false)
+        console.log(err);
+      });
+  },
+};
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  actions,
+  mutations,
+};

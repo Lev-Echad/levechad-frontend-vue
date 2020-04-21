@@ -18,12 +18,22 @@ Vue.use(VueRouter)
   },
   {
     path: '/citizen',
-    component: () => import(/* webpackChunkName: "citizen" */ '../views/Citizen.vue'),
+    component: () => import(/* webpackChunkName: "citizen" */ '../views/citizen/Index.vue'),
     children: [
       {
         name: "Citizen",
-        path: "/",
-        component: () => import("@/views/citizen/Home")
+        path: "",
+        component: () => import("@/views/citizen/RequestHelp")
+      },
+      // {
+      //   name: "RequestHelp",
+      //   path: "RequestHelp",
+      //   component: () => import("@/views/citizen/RequestHelp")
+      // },
+      {
+        name: "FinishRequestForm",
+        path: "request-sent",
+        component: () => import("@/views/citizen/FinishRequest")
       },
     ]
   },
@@ -62,6 +72,11 @@ Vue.use(VueRouter)
           path: "missions",
           component: () => import("@/views/hamal/Missions")
       },
+      {
+          name: 'EasterEgg',
+          path: "EasterEgg",
+          component: () => import("@/views/hamal/components/Easter")
+      },
     ]
   },
   {
@@ -75,8 +90,18 @@ Vue.use(VueRouter)
       },
       {
           name: 'Signup',
-          path: "/signup",
+          path: "signup",
           component: () => import("@/views/volunteer/Auth/Signup")
+      },
+      {
+          name: 'VolunteerLogin',
+          path: "login",
+          component: () => import("@/views/volunteer/Auth/Login")
+      },
+      {
+          name: 'VolunteerThankYou',
+          path: "VolunteerThankYou",
+          component: () => import("@/views/volunteer/Auth/VolunteerThankYou")
       },
 
     ]

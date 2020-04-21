@@ -1,1054 +1,296 @@
 import axios from "axios";
+import router from "../../router/index";
 
 const state = {
-  volunteersList: null,
-  missionList: [
-    {
-      "id": 7701,
-      "full_name": "אילנה דלל",
-      "phone": 508320135,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 10:10",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "הורקנוס 14 תל אביב",
-      "comments": "הסתדרה עם הקניות",
-      "type": "קניות",
-      "moreinfo": "לתאם עם אילנה",
-      "status": "לא טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "אלון גלבוע - 7343",
-      "full_address": "תל אביב -יפו הורקנוס 14 תל אביב",
-      "lat": 32.0939137,
-      "lng": 34.781184
+  missionFilters: {
+ //   exact: null,
+  },
+  volunteerFilter:{
+    id: '',
+    tz_number: '',
+    first_name: '',
+    last_name: '',
+    city: '',
+    phone_number: '',
+  },
+  volunteerPage:{
+    next: false,
+    current: 1,
+    count: '',
+    previous: false
+  },
+
+  citiesList: [],
+
+  //used to push data from sepetate components
+  VolunteerSignUpFields: {
+    first_name: "",
+    last_name: "",
+    tz_number: "",
+    date_of_birth: null,
+    gender: null,
+    city: null,
+    address: "",
+    moving_way: null,
+    week_assignments_capacity: null,
+    wanted_assignments: null,
+    phone_number: "",
+    email: "",
+    parental_consent: {
+      parent_name: "XXX",
+      parent_id: "123123123",
     },
-    {
-      "id": 7702,
-      "full_name": "נחמה סרברניק",
-      "phone": 549741871,
-      "area": "צפון",
-      "city": "חיפה",
-      "timestamp": "10/04/2020 10:11",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "יפה נוף 122 ד4 ק3",
-      "comments": "איחוד הצלה 1223680",
-      "type": "קניות",
-      "moreinfo": ".",
-      "status": "בטיפול",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "חיפה יפה נוף 122 ד4 ק3",
-      "lat": 32.8033874,
-      "lng": 34.9902106
-    },
-    {
-      "id": 7703,
-      "full_name": "נחמה סרברניק",
-      "phone": 549741871,
-      "area": "צפון",
-      "city": "חיפה",
-      "timestamp": "10/04/2020 10:11",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "יפה נוף 122 ד4 ק3",
-      "comments": "איחוד הצלה 1223680",
-      "type": "קניות",
-      "moreinfo": ".",
-      "status": "בטיפול",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "חיפה יפה נוף 122 ד4 ק3",
-      "lat": 32.8033874,
-      "lng": 34.9902106
-    },
-    {
-      "id": 7704,
-      "full_name": "בתיה דוידוב",
-      "phone": 543030711,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 10:11",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "רחוב המלך גורג 62 ד7 ק2",
-      "comments": "כרטיס. הועבר להתעוררות",
-      "type": "קניות",
-      "moreinfo": ".",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים רחוב המלך גורג 62 ד7 ק2",
-      "lat": 31.7749517,
-      "lng": 35.2173167
-    },
-    {
-      "id": 7705,
-      "full_name": "זהבה נקדימון",
-      "phone": 522725726,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 10:11",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "חיים לבנון 87",
-      "comments": "פנייה כפולה. מס מקורי 7697",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם אצל תומר",
-      "status": "לא טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "תומר שנקר - 3088",
-      "full_address": "תל אביב -יפו חיים לבנון 87",
-      "lat": 32.118872,
-      "lng": 34.801459
-    },
-    {
-      "id": 7706,
-      "full_name": "שמואל גינצבורג",
-      "phone": 539396500,
-      "area": "דרום",
-      "city": "אשדוד",
-      "timestamp": "10/04/2020 10:16",
-      "reason": "בידוד",
-      "address": "הרי גולן 3/22",
-      "comments": "",
-      "type": "קניות",
-      "moreinfo": "רשימת קניות: ביצים, קילו עגבניות, סבון גוף נקה שבע (לא נוזלי)",
-      "status": "לא טופל",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "אשדוד הרי גולן 3/22",
-      "lat": 31.7828656,
-      "lng": 34.6318637
-    },
-    {
-      "id": 7707,
-      "full_name": "שלמה יצחק",
-      "phone": 26720671,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 10:19",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "אליעזר קשני 15 דירה 1",
-      "comments": "אילנה",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם במרשם",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה",
-      "voltunteer": "",
-      "full_address": "ירושלים אליעזר קשני 15 דירה 1",
-      "lat": 31.747233,
-      "lng": 35.2339152
-    },
-    {
-      "id": 7708,
-      "full_name": "דוד מרצינו",
-      "phone": 584013408,
-      "area": "צפון",
-      "city": "פרדס חנה-כרכור",
-      "timestamp": "10/04/2020 10:19",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "שכונת שובל אחווה רחוב 606 על 2",
-      "comments": "בן אדם חולה סכרת צריך תרופות",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם אוקסיקונטין פעמיים ביום 40 מלגרם",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "יקירה",
-      "voltunteer": "שירה פוגל - 3371",
-      "full_address": "פרדס חנה-כרכור שכונת שובל אחווה רחוב 606 על 2",
-      "lat": 32.4728028,
-      "lng": 34.9742001
-    },
-    {
-      "id": 7709,
-      "full_name": "שרה וישראל עוזרי",
-      "phone": 26247362,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 10:22",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "שמואל הנגיד 21, קומה 4",
-      "comments": "דחוף להיום. הועבר להתעוררות",
-      "type": "תרופות",
-      "moreinfo": "צריכים עזרה בקניית מסכות,כפפות, אלכוג׳ל, מגבונים לחיטוי.",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים שמואל הנגיד 21, קומה 4",
-      "lat": 31.7784973,
-      "lng": 35.2150016
-    },
-    {
-      "id": 7710,
-      "full_name": "מוזס איריס עבור יצחק שמחה",
-      "phone": 543972713,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 10:24",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "קהילת קנדה 11",
-      "comments": "איריס מסרה שהם הסתדרו ובמידה ויצטרכו משהו נוסף יתקשרו אלינו שוב",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם במרשם",
-      "status": "לא טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "",
-      "full_address": "תל אביב -יפו קהילת קנדה 11",
-      "lat": 32.0327734,
-      "lng": 34.7528612
-    },
-    {
-      "id": 7711,
-      "full_name": "קטי הרשקביץ",
-      "phone": 548323737,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 10:24",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "משה בריל 19",
-      "comments": "אמא שלי זקוקה לתרופות.סיון 0525683881",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם יש מרשם דיגיטלי אשר ממתין בבית המרקחת 2 תרופות שונות והיא לא יכולה לצאת מהבית כי נמצאת בקבוצת סיכון מאוד גבוהה ואני לא קרובה אליה ולא ניידת. אנא עזרתכם אם משהוא יכול להביא לה את התקופות היום",
-      "status": "טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "סיון עטיה - 9520",
-      "full_address": "תל אביב -יפו משה בריל 19",
-      "lat": 32.0478953,
-      "lng": 34.8030639
-    },
-    {
-      "id": 7712,
-      "full_name": "זוהר אמונה",
-      "phone": 525531839,
-      "area": "מרכז",
-      "city": "פתח תקווה",
-      "timestamp": "10/04/2020 10:35",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "יאנוש קורצאק 18",
-      "comments": "נכה 100 אחוז מרותקת לכסא גלגלים אסמטית- חיה לבד עם מטפלת לאחר אירוע מוחי קשה עם בעיות בריאותיות נווספות",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם יש מרשמים קבועים במרפאה",
-      "status": "התקבלה",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "פתח תקווה יאנוש קורצאק 18",
-      "lat": 32.0695298,
-      "lng": 34.8936475
-    },
-    {
-      "id": 7713,
-      "full_name": "גלף גת",
-      "phone": 546673915,
-      "area": "מרכז",
-      "city": "נתניה",
-      "timestamp": "10/04/2020 10:41",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "שמורק 15דירה 51",
-      "comments": "דוברי רוסית בלבד. נר לפנות למתרגמת מתנדבת גולדה 0545791633.",
-      "type": "קניות",
-      "moreinfo": "חלב 1 קוטג 5 או 3% שתי יחידות שמנת חמוצה 15% ארבע יחידות קוד לכניסה לבניין 1379# קומה 9",
-      "status": "טופל",
-      "last_modified_by": "חן דהן",
-      "voltunteer": "אולגה פורטנוב - 3215",
-      "full_address": "נתניה שמורק 15דירה 51",
-      "lat": 32.2962703,
-      "lng": 34.8514249
-    },
-    {
-      "id": 7714,
-      "full_name": "רוחמה כהן",
-      "phone": 507780790,
-      "area": "צפון",
-      "city": "חיפה",
-      "timestamp": "10/04/2020 10:44",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "ליאון בלום 56 קומה 1 דירה 4",
-      "comments": "להקיש באינטרקום 1717*",
-      "type": "קניות",
-      "moreinfo": "תמסור בטלפון",
-      "status": "טופל",
-      "last_modified_by": "אוהד",
-      "voltunteer": "",
-      "full_address": "חיפה ליאון בלום 56 קומה 1 דירה 4",
-      "lat": 32.801139,
-      "lng": 34.9996178
-    },
-    {
-      "id": 7715,
-      "full_name": "קלרה דוסורץ",
-      "phone": 537678790,
-      "area": "מרכז",
-      "city": "רמת גן",
-      "timestamp": "10/04/2020 10:46",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "שדרות התמרים 9",
-      "comments": "לטיפול בתאריך 12.4 יום א'",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם במרשם",
-      "status": "בטיפול",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "",
-      "full_address": "רמת גן שדרות התמרים 9",
-      "lat": 32.0892543,
-      "lng": 34.8218344
-    },
-    {
-      "id": 7716,
-      "full_name": "גרגורי מרזייב",
-      "phone": 503003442,
-      "area": "דרום",
-      "city": "שדרות",
-      "timestamp": "10/04/2020 10:50",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "בן יהודה 4 דירה 25 קומה 1",
-      "comments": "דובר רוסית",
-      "type": "קניות",
-      "moreinfo": "מצה, 30 ביצים, עוף שלם",
-      "status": "טופל",
-      "last_modified_by": "תמיר",
-      "voltunteer": "הגר טננבוים - 4194",
-      "full_address": "שדרות בן יהודה 4 דירה 25 קומה 1",
-      "lat": 31.5228155,
-      "lng": 34.5959074
-    },
-    {
-      "id": 7717,
-      "full_name": "סלומון אברהם מוזס",
-      "phone": 527020491,
-      "area": "דרום",
-      "city": "אשדוד",
-      "timestamp": "10/04/2020 10:57",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "שגב 4 דירה 2",
-      "comments": "הטלפון של בתיה שולמית - גרה איתו",
-      "type": "קניות",
-      "moreinfo": "צריך שיקנו עבורו מזון נוזלי וטיטולים.",
-      "status": "לא טופל",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "אשדוד שגב 4 דירה 2",
-      "lat": 31.7954364,
-      "lng": 34.6552869
-    },
-    {
-      "id": 7718,
-      "full_name": "תמרה",
-      "phone": 506592213,
-      "area": "מרכז",
-      "city": "פתח תקווה",
-      "timestamp": "10/04/2020 10:58",
-      "reason": "אחר",
-      "address": "רחוב חפץ חיים 45ב/1 בחצר",
-      "comments": "",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם .",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "",
-      "voltunteer": "תמרה שפיצר - 4831",
-      "full_address": "פתח תקווה רחוב חפץ חיים 45ב/1 בחצר",
-      "lat": 32.0811966,
-      "lng": 34.8880878
-    },
-    {
-      "id": 7719,
-      "full_name": "יצחק יצחק",
-      "phone": 523896208,
-      "area": "מרכז",
-      "city": "פתח תקווה",
-      "timestamp": "10/04/2020 11:03",
-      "reason": "אחר",
-      "address": "נחלת צבי",
-      "comments": "הועבר לטבלת רווחה. אדם מבוגר ללא אמצעים",
-      "type": "אחר",
-      "moreinfo": "זקוק לארוחות חמות",
-      "status": "לא טופל",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "פתח תקווה נחלת צבי",
-      "lat": 32.0929031,
-      "lng": 34.8911027
-    },
-    {
-      "id": 7720,
-      "full_name": "טובה פרידמן",
-      "phone": 523997747,
-      "area": "מרכז",
-      "city": "רמת גן",
-      "timestamp": "10/04/2020 11:05",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "זבוטינסקי 16/31",
-      "comments": "לטיפול בתאריך 12.4 יום א'",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם Novorapid100un/ml 1 vial",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "נועם לוי - 3568",
-      "full_address": "רמת גן זבוטינסקי 16/31",
-      "lat": 32.0832064,
-      "lng": 34.8059627
-    },
-    {
-      "id": 7721,
-      "full_name": "סימה",
-      "phone": 505382019,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 11:06",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "קהילת קליבלנד 10 ד3 נוה שרת",
-      "comments": "לא רלוונטי",
-      "type": "קניות",
-      "moreinfo": ".",
-      "status": "לא טופל",
-      "last_modified_by": "אוריה והדת",
-      "voltunteer": "דפנה הרכבי - 4121",
-      "full_address": "תל אביב -יפו קהילת קליבלנד 10 ד3 נוה שרת",
-      "lat": 32.1176815,
-      "lng": 34.8429747
-    },
-    {
-      "id": 7722,
-      "full_name": "מיטל טרבלסי",
-      "phone": 506232219,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 11:13",
-      "reason": "אחר",
-      "address": "רחוב אדם 37/5",
-      "comments": "הועבר להתעוררות",
-      "type": "קניות",
-      "moreinfo": "1 קמח מצה דק 1 קמת תפו\"א תבנית ביצים 2 ממרח שוקולד או 1 גדול של 1 קילו 6 יחידות בצל 1 אריזה גזר עוגיות יין הריבועיות 6 בננות 1 פודינג וניל",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים רחוב אדם 37/5",
-      "lat": 31.7484296,
-      "lng": 35.2298611
-    },
-    {
-      "id": 7723,
-      "full_name": "אורן צדקני",
-      "phone": 544202463,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 11:15",
-      "reason": "בידוד",
-      "address": "שערי תורה 20 בית וגן ירושלים",
-      "comments": "הועבר להתעוררות",
-      "type": "קניות",
-      "moreinfo": "העברת צנצנת חרוסת מבית וגן לארנונה בירושלים צריך להתבצע בזמן הקרוב מאחר ורכב מעביר את הצנצנת לבית וגן בשעה הקרובה",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים שערי תורה 20 בית וגן ירושלים",
-      "lat": 31.7647766,
-      "lng": 35.1831326
-    },
-    {
-      "id": 7724,
-      "full_name": "עינת",
-      "phone": 506997334,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 11:22",
-      "reason": "אחר",
-      "address": "רחוב השלה",
-      "comments": "התרופה נמצאת בבית מרקחת של מכבי ברחוב השלה 7 תל אביב. נופר מספר פלא 0524831732",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם אלי דיאמנט מספר- 0506795111 תז- 054500806 חולה קורונה שצריך תרופות ללא כרטיס",
-      "status": "טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "נופר רוזנבלט - 4367",
-      "full_address": "תל אביב -יפו רחוב השלה",
-      "lat": 32.090916,
-      "lng": 34.779345
-    },
-    {
-      "id": 7725,
-      "full_name": "מלכה",
-      "phone": 532486575,
-      "area": "צפון",
-      "city": "מגדל העמק",
-      "timestamp": "10/04/2020 11:29",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "שושנת העמקים",
-      "comments": "נכות, זקנה, ילד בעל תעודת נכות",
-      "type": "קניות",
-      "moreinfo": "חסר סלי מזון, ואוכל . אשמח לבירור טלפוני",
-      "status": "התקבלה",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "מגדל העמק שושנת העמקים",
-      "lat": 32.6772163,
-      "lng": 35.2521689
-    },
-    {
-      "id": 7726,
-      "full_name": "ברוריה כהן",
-      "phone": 527601985,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 11:30",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "תחכמוני 34, מקור ברוך",
-      "comments": "דחוף- קופ״ח נסגרת בקרוב! הועבר להתעוררות",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם המרשם כבר בקופ״ח לאומית ויש הורעת קבע.",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים תחכמוני 34, מקור ברוך",
-      "lat": 31.7901499,
-      "lng": 35.2122335
-    },
-    {
-      "id": 7727,
-      "full_name": "אליס ויצמן",
-      "phone": 532272809,
-      "area": "דרום",
-      "city": "אשקלון",
-      "timestamp": "10/04/2020 11:34",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "בלפור 8, דירה 2, קומה 1 - ברנע",
-      "comments": "",
-      "type": "תרופות",
-      "moreinfo": "רוצה להזמין תרופות דרך האינטרנט בקופ\"ח כללית. בית המרקחת נמצא במרפאת היובל, רחוב חיים סלע 10, קומה 1. מרכז בכור, אשקלון. הכרטיס המגנטי אצלך.",
-      "status": "לא טופל",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "אשקלון בלפור 8, דירה 2, קומה 1 - ברנע",
-      "lat": 31.6890923,
-      "lng": 34.576447
-    },
-    {
-      "id": 7728,
-      "full_name": "פני ויזני",
-      "phone": 525571344,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 11:35",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "גילו הנופך 243 דירה 30",
-      "comments": "הועבר להתעוררות",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם במרשם",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים גילו הנופך 243 דירה 30",
-      "lat": 31.731412,
-      "lng": 35.194769
-    },
-    {
-      "id": 7729,
-      "full_name": "לטיסיה",
-      "phone": 533190913,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 11:40",
-      "reason": "אחר",
-      "address": "הפיסגה 33",
-      "comments": "הועבר להתעוררות",
-      "type": "קניות",
-      "moreinfo": ".",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים הפיסגה 33",
-      "lat": 31.767606,
-      "lng": 35.183555
-    },
-    {
-      "id": 7730,
-      "full_name": "צילה בן אבו",
-      "phone": 533502281,
-      "area": "דרום",
-      "city": "באר שבע",
-      "timestamp": "10/04/2020 11:42",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "צביה המלכה 36/3 שכונה ד'",
-      "comments": "",
-      "type": "תרופות",
-      "moreinfo": "אישה עיוורת, צריכה שיאספו עבורה תרופות מבית מרקחת. רסקיו. תשלם באשראי.",
-      "status": "לא טופל",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "באר שבע צביה המלכה 36/3 שכונה ד'",
-      "lat": 31.262778,
-      "lng": 34.795237
-    },
-    {
-      "id": 7731,
-      "full_name": "אהרון שנירין",
-      "phone": 587114225,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 11:43",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "לאה גולדברג 10 דירה 5, נוה יעקב",
-      "comments": "קניות ותרופות. דובר רוסית.. הועבר להתעוררות",
-      "type": "תרופות",
-      "moreinfo": ".",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים לאה גולדברג 10 דירה 5, נוה יעקב",
-      "lat": 31.841936,
-      "lng": 35.2411233
-    },
-    {
-      "id": 7732,
-      "full_name": "משולם",
-      "phone": 548267223,
-      "area": "צפון",
-      "city": "חיפה",
-      "timestamp": "10/04/2020 11:45",
-      "reason": "בידוד",
-      "address": "ירושלים 28",
-      "comments": "קניות לזוג חולי קורונה",
-      "type": "קניות",
-      "moreinfo": ".",
-      "status": "בטיפול",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "חיפה ירושלים 28",
-      "lat": 32.8074316,
-      "lng": 34.9990849
-    },
-    {
-      "id": 7733,
-      "full_name": "גבריאלה אלגשטיין",
-      "phone": 504746235,
-      "area": "מרכז",
-      "city": "רמת גן",
-      "timestamp": "10/04/2020 11:47",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "צוריאל",
-      "comments": "דחוף!! בוצע על ידי מישהו מהמשפחה שלה",
-      "type": "תרופות",
-      "moreinfo": "תרופת מרשם במרשם (תרופה לדלקת)",
-      "status": "לא טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "",
-      "full_address": "רמת גן צוריאל",
-      "lat": 32.0877016,
-      "lng": 34.8070839
-    },
-    {
-      "id": 7734,
-      "full_name": "טינה",
-      "phone": 37391803,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 11:49",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "ליבנה אליעזר 6",
-      "comments": "צריכה חיתולים. דחוף",
-      "type": "תרופות",
-      "moreinfo": "חיתולים",
-      "status": "טופל",
-      "last_modified_by": "עמית גוברין",
-      "voltunteer": "",
-      "full_address": "תל אביב -יפו ליבנה אליעזר 6",
-      "lat": 32.0852999,
-      "lng": 34.7817676
-    },
-    {
-      "id": 7735,
-      "full_name": "יעקב פוזן",
-      "phone": 527111026,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 11:52",
-      "reason": "בידוד",
-      "address": "רחוב מזלי הרים לוין 106א כניסה ב",
-      "comments": "הועבר להתעוררות",
-      "type": "קניות",
-      "moreinfo": ".",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים רחוב מזלי הרים לוין 106א כניסה ב",
-      "lat": 31.8020242,
-      "lng": 35.2197289
-    },
-    {
-      "id": 7736,
-      "full_name": "זהבה שמיר",
-      "phone": 527667407,
-      "area": "מרכז",
-      "city": "ראשון לציון",
-      "timestamp": "10/04/2020 11:54",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "לובמן 17 דירה 2",
-      "comments": "תרופות והפקדת ציק'",
-      "type": "תרופות",
-      "moreinfo": ".",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "ירדן עוזרי",
-      "voltunteer": "רוני זמיר - 11029",
-      "full_address": "ראשון לציון לובמן 17 דירה 2",
-      "lat": 31.9589884,
-      "lng": 34.8091674
-    },
-    {
-      "id": 7737,
-      "full_name": "סוזי עבור לאה מימר",
-      "phone": 547927649,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 12:01",
-      "reason": "אחר",
-      "address": "גר צדק 7",
-      "comments": "להעביר לרווחה",
-      "type": "אחר",
-      "moreinfo": "ארוחות חמות לאישה מבוגרת חסרת אמצעים",
-      "status": "לא טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "",
-      "full_address": "תל אביב -יפו גר צדק 7",
-      "lat": 32.0416995,
-      "lng": 34.7587446
-    },
-    {
-      "id": 7738,
-      "full_name": "גליה שביט",
-      "phone": 545769066,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 12:02",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "ארלוזורוב 120 דירה 1",
-      "comments": "תשאיר כסף מחוץ לדלת 0727016165. מתנדב בשם איתמר. פלאפון 0526986633",
-      "type": "קניות",
-      "moreinfo": "תמסור את הרשימה בפלאפון",
-      "status": "טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "איתמר ירון - 3776",
-      "full_address": "תל אביב -יפו ארלוזורוב 120 דירה 1",
-      "lat": 32.084669,
-      "lng": 34.7837278
-    },
-    {
-      "id": 7739,
-      "full_name": "אביבה סויסה",
-      "phone": 544868431,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 12:14",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "רחוב הנותרים 5 קטמונים",
-      "comments": "חייב להיות לפני שבת!!!!!!! הועברת להתעוררות",
-      "type": "קניות",
-      "moreinfo": "לאסוף את כמה מוצרים מהבית שלה ולקחת לרחוב הע\"ח 5 משפחת עזרה (סימי ויפה) 026272780",
-      "status": "טופל",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "שירה בירנבוים - 9699",
-      "full_address": "ירושלים רחוב הנותרים 5 קטמונים",
-      "lat": 31.7557801,
-      "lng": 35.1968539
-    },
-    {
-      "id": 7740,
-      "full_name": "אסתר",
-      "phone": 508593590,
-      "area": "דרום",
-      "city": "באר שבע",
-      "timestamp": "10/04/2020 12:16",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "קדיש לוז 100",
-      "comments": "עזרה בקניית ביצים",
-      "type": "קניות",
-      "moreinfo": "ביצים",
-      "status": "לא טופל",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "באר שבע קדיש לוז 100",
-      "lat": 31.2573073,
-      "lng": 34.765298
-    },
-    {
-      "id": 7741,
-      "full_name": "אורה שואן",
-      "phone": 538323415,
-      "area": "מרכז",
-      "city": "פתח תקווה",
-      "timestamp": "10/04/2020 12:21",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "פרופסור שור 8 כניסה 2 קומה 2 דירה 4",
-      "comments": "דחוף לשבת טלפון בבית 0775561728",
-      "type": "קניות",
-      "moreinfo": "שהמתנב יתקשר לתאם",
-      "status": "טופל",
-      "last_modified_by": "חן דהן",
-      "voltunteer": "שירה זפרני - 6782",
-      "full_address": "פתח תקווה פרופסור שור 8 כניסה 2 קומה 2 דירה 4",
-      "lat": 32.0939197,
-      "lng": 34.8868301
-    },
-    {
-      "id": 7742,
-      "full_name": "osnat barlev",
-      "phone": 39229274,
-      "area": "מרכז",
-      "city": "פתח תקווה",
-      "timestamp": "10/04/2020 12:25",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "רפופרט 5",
-      "comments": "מבקשת שיביאו למטפלת של דודה הקשישה ציק על העבודה שלה, אבא שלי קשיש ואחראי עליה הדודה גרה בגאולים 3 רמת גן קומת קרקע משפחת רחמים דלת 1",
-      "type": "קניות",
-      "moreinfo": "להביא לה ציק ואחרי זה לקנות לדודה קניות ברמת גן סוכר מלח בננות 8\\ 7 עגבניות אורז רגיל 3 חבילות אם יש 30 ביצים חלב דבש שמן כוסברה סבון גוף",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "מתנדב:0507663499",
-      "voltunteer": "",
-      "full_address": "פתח תקווה רפופרט 5",
-      "lat": 32.096366,
-      "lng": 34.881089
-    },
-    {
-      "id": 7743,
-      "full_name": "נתנאל בן זקן",
-      "phone": 533101557,
-      "area": "צפון",
-      "city": "טבריה",
-      "timestamp": "10/04/2020 12:28",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "הרב אלישיב בניין 7 דירה 5",
-      "comments": "לבוא לקחת כרטיס מהבית",
-      "type": "קניות",
-      "moreinfo": "רשימת קניות יחד עם הכרטיס",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "טבריה הרב אלישיב בניין 7 דירה 5",
-      "lat": 32.7833128,
-      "lng": 35.5017045
-    },
-    {
-      "id": 7744,
-      "full_name": "חנה",
-      "phone": 545293529,
-      "area": "מרכז",
-      "city": "רמלה",
-      "timestamp": "10/04/2020 12:44",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "אצל 4",
-      "comments": "בחורה מבוגרת צריכה עזרה עם קניות",
-      "type": "קניות",
-      "moreinfo": ".",
-      "status": "טופל",
-      "last_modified_by": "חן דהן",
-      "voltunteer": "",
-      "full_address": "רמלה אצל 4",
-      "lat": 31.9285325,
-      "lng": 34.8732396
-    },
-    {
-      "id": 7745,
-      "full_name": "אילנה ינאי",
-      "phone": 547905041,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 12:53",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "בצאלאל 27",
-      "comments": "אילנה ביקשה שנעשה זאת בראשון. המתנדבת בת אל תעזור. פלאפון 0504277884",
-      "type": "קניות",
-      "moreinfo": "מתנדב יתקשר לברר",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "בת-אל זגורי - 6244",
-      "full_address": "תל אביב -יפו בצאלאל 27",
-      "lat": 32.0828156,
-      "lng": 34.7850322
-    },
-    {
-      "id": 7746,
-      "full_name": "הומה",
-      "phone": 587971600,
-      "area": "צפון",
-      "city": "טבריה",
-      "timestamp": "10/04/2020 13:27",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "רחוב שקד 38, טבריה",
-      "comments": "גרה בנתניה, לתקופה הזו עברה לטבריה להיות עם בתה. מכיוון והיא לא תושבת טבריה העירייה לא עוזרת לה. גם עיריית נתהיה לא יכולים לסייע.",
-      "type": "אחר",
-      "moreinfo": "בקשת חבילת מזון. האישה ערירית. מתביישת מבתה ומתביישת לפנות לארגונים רבים. בנוסף - עד היום קיבלה סיוע מארגון \"חברים לרפואה\".",
-      "status": "התקבלה",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "טבריה רחוב שקד 38, טבריה",
-      "lat": 32.7869271,
-      "lng": 35.5209634
-    },
-    {
-      "id": 7747,
-      "full_name": "סוזי רווח",
-      "phone": 547927649,
-      "area": "מרכז",
-      "city": "תל אביב -יפו",
-      "timestamp": "10/04/2020 13:50",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "גר צדק 7, יפו, קומה 2, דירה 8",
-      "comments": "הועבר לרווחה",
-      "type": "אחר",
-      "moreinfo": "שלום רב, מבוקשת עזרה עבור קשישה בת 81 תושבת דרום תל אביב, תרומת סל מזון, ירקות, פירות, מוצרי טואלטיקה: נייר טואלט, מסכות, מגבות נייר, מגבונים, אלכוג'ל, כפפות, חומרי ניקוי וחיטוי, מדובר על קשישה בעלת אמצעים דלים ומתקשה כלכלית. תודה רבה על הסיוע. חג שמח, סוזי 0547927649",
-      "status": "לא טופל",
-      "last_modified_by": "לי אזולאי חמל תא",
-      "voltunteer": "",
-      "full_address": "תל אביב -יפו גר צדק 7, יפו, קומה 2, דירה 8",
-      "lat": 32.0416995,
-      "lng": 34.7587446
-    },
-    {
-      "id": 7748,
-      "full_name": "ריטה",
-      "phone": 524503116,
-      "area": "צפון",
-      "city": "חיפה",
-      "timestamp": "10/04/2020 13:54",
-      "reason": "קבוצת סיכון גבוהה",
-      "address": "בת גלים בית אבות",
-      "comments": "צריכה הליכון דחוף מאוד, מוכנה לקנות אם צריך.",
-      "type": "אחר",
-      "moreinfo": "ריטה המטפלת של סוניה צריכה הליכון לסוניה",
-      "status": "התקבלה",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "חיפה בת גלים בית אבות",
-      "lat": 32.8140587,
-      "lng": 34.9668539
-    },
-    {
-      "id": 7749,
-      "full_name": "יהודית עבור אחיה מנסנו דוד",
-      "phone": 526611670,
-      "area": "ירושלים והסביבה",
-      "city": "ירושלים",
-      "timestamp": "10/04/2020 13:54",
-      "reason": "אחר",
-      "address": "ארמון הנציב הרשל גרינשפן 6 דירה 23 (הדירה בכניסה מצד ימין)",
-      "comments": "אדם מבוגר, לא שומע טוב ומצב נפשי לא ככ טוב הועבר להתעוררות",
-      "type": "אחר",
-      "moreinfo": "זקוק לעזרה עם הטלוויזיה, הוט מוכנים לעזור טלפונית ולהנחות מתנדב שיסכים להכנס\\ טכנאי- מוכנים לשלם. זה הדבר היחיד שיש לו כל היום והבידור שלו",
-      "status": "הועבר למתנדב",
-      "last_modified_by": "שירה בירנבוים",
-      "voltunteer": "",
-      "full_address": "ירושלים ארמון הנציב הרשל גרינשפן 6 דירה 23 (הדירה בכניסה מצד ימין)",
-      "lat": 31.7460143,
-      "lng": 35.2337776
-    },
-    {
-      "id": 7750,
-      "full_name": "לא ידוע",
-      "phone": 545473017,
-      "area": "מרכז",
-      "city": "פתח תקווה",
-      "timestamp": "10/04/2020 13:56",
-      "reason": "אחר",
-      "address": "חיים עוזר 13",
-      "comments": "הועבר לטבלת רווחה .תמיכה כספית, אישה עם תינוקת קטנה.",
-      "type": "קניות",
-      "moreinfo": "מוצרים בסיסיים - תפו\"א, מטרנה וכו",
-      "status": "לא טופל",
-      "last_modified_by": "",
-      "voltunteer": "",
-      "full_address": "פתח תקווה חיים עוזר 13",
-      "lat": 32.0891968,
-      "lng": 34.8867709
-    }
-  ]
+    languages: [],
+  },
+
+  helpRequestFields: {
+    full_name: "",
+    phone_number: "",
+    city: null,
+    address: "",
+    notes: "",
+    type: null,
+    type_text: "",
+    request_reason: null,
+  },
+  helpRequestCityValid: false,
+  volunteersSignUpCityValid: false,
+  volunteersSignUpBdateValid: false,
+
+  isLoading: false,
+  createVolunteerFailed: false,
+
+
 };
 const getters = {
-  getVolunteers(state) {
+  getVolunteersList(state) {
     return state.volunteersList;
   },
-  getMissions(state){
-
-    //shit for the dummy data
-    // let vals = [...state.missionList]
-    // for(let val of vals){
-    //   val['position'].lat = val.lat
-    //   val.position.lng = val.lng
-    // }
-    // console.log(vals)
+  getMissions(state) {
     return state.missionList;
-  }
+  },
+
+  getCitiesList(state) {
+    return state.citiesList;
+  },
+
+  getHelpRequestFormFields(state) {
+    return state.helpRequestFields;
+  },
+
+  getHelpRequestCityValid(state) {
+    return state.helpRequestCityValid;
+  },
+  getVolunteersSignUpCityValid(state) {
+    return state.volunteersSignUpCityValid;
+  },
+  getVolunteersSignUpBdateValid(state) {
+    return state.volunteersSignUpBdateValid;
+  },
+  getCreateVolunteerFailed(state) {
+    return state.createVolunteerFailed;
+  },
+  getIsLoading(state) {
+    return state.isLoading;
+  },
+  getVolunteerFilter(state){
+    return state.volunteerFilter
+  },
+  getVolunteerPage(state){
+    return state.volunteerPage
+  },
+
 };
 
 const mutations = {
-  setVoltuneersList({ state }, payload) {
-    console.log("blabla");
+  // setVoltuneersList({ state }, payload) {
+  //   console.log("blabla");
+  // },
+  setMissionsList({ state }, payload) {
+    missionList.push([...payload]);
+  },
+
+  setCitiesList(state, payload) {
+    state.citiesList = payload;
+  },
+  setVolunteerSignUpField(state, payload) {
+    state.VolunteerSignUpFields = {
+      ...state.VolunteerSignUpFields,
+      ...payload,
+    };
+  },
+  setHelpRequestFormField(state, payload) {
+    state.helpRequestFields = { ...state.helpRequestFields, ...payload };
+  },
+  setHelpRequestCityValid(state, payload) {
+    state.helpRequestCityValid = payload;
+  },
+  setVolunteersSignUpCityValid(state, payload) {
+    state.volunteersSignUpCityValid = payload;
+  },
+  setVolunteersSignUpBdateValid(state, payload) {
+    state.volunteersSignUpBdateValid = payload;
+  },
+  setCreateVolunteerFailed(state, payload) {
+    state.createVolunteerFailed = payload;
+  },
+  setIsLoading(state, payload) {
+    state.isLoading = payload;
+  },
+
+  setVolunteersList(state, payload) {
+    //state.voltunteerList = payload;
+    state.volunteersList.length = 0; // Clear contents
+    state.volunteersList.push.apply(state.volunteersList, payload); // Append new contents
+  },
+  setVolunteerFilter(state, payload){
+    state.volunteerFilter = {...state.volunteerFilter,...payload}
+  },
+  setVolunteerPageMeta(state, payload){
+    
+    state.volunteerPage.count = payload.count
+    state.volunteerPage.next = (payload.next) ? true : false
+    state.volunteerPage.previous = (payload.previous) ? true : false
+  },
+  setVolunteerPage(state, payload){
+    state.volunteerPage.current = payload
   }
+  
 };
 const actions = {
-  getVolunteers(context) {
-    console.log(context.rootState.hamalAuth.accessToken);
+  reqGetVolunteers(context) {
+    context.commit("setIsLoading", true);
     axios
-      .get(context.rootState.baseAPIurl+"/api/volunteers/",{
-        headers:{
-          Authorization: "Token " + context.rootState.hamalAuth.accessToken
-        }
+      .get(context.rootState.baseAPIurl +
+         "/api/volunteers/"
+         +"?id="+context.state.volunteerFilter.id
+         +"&tz_number="+context.state.volunteerFilter.tz_number
+         +"&first_name="+context.state.volunteerFilter.first_name
+         +"&last_name="+context.state.volunteerFilter.last_name
+         +"&city="+context.state.volunteerFilter.city
+         +"&phone_number="+context.state.volunteerFilter.phone_number
+         +"&phone_number="+context.state.volunteerFilter.phone_number
+         +"&page="+context.state.volunteerPage.current
+         +"&pageSize=25"
+         , {
+        headers: {
+          Authorization: "Token " + context.rootState.hamalAuth.accessToken,
+        },
       })
-      .then(response => {
+      .then((response) => {
+        context.commit("setVolunteersList", response.data.results);
+        context.commit("setVolunteerPageMeta", {
+          count: response.data.count,
+          next: response.data.next,
+          previous: response.data.previous,
+        });
+        context.commit("setIsLoading", false);
         console.log(response);
       })
-      .catch(err => {
+      .catch((err) => {
+        context.commit("setIsLoading", false);
         console.log(err);
       });
   },
 
-  createVolunteer(payload) {
+  reqCreateVolunteer(context) {
+    context.commit("setIsLoading", true);
     axios
       .post(
-        "http://localhost:7000/api/registration/",
+        context.rootState.baseAPIurl + "/api/registration/",
         {
-          first_name: "",
-          last_name: "",
-          tz_number: "",
-          date_of_birth: null,
-          gender: null,
-          city: null,
-          address: "",
-          moving_way: null,
-          week_assignments_capacity: null,
-          wanted_assignments: null,
-          phone_number: "",
-          email: "",
-          parental_consent: {
-            parent_name: "",
-            parent_id: ""
-          },
-          languages: []
+          ...context.state.VolunteerSignUpFields,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            
-          }
+          },
         }
       )
-      .then(response => {
+      .then((response) => {
+        context.commit("setIsLoading", false);
+        context.commit("setCreateVolunteerFailed", false);
+        router.push({ name: "VolunteerThankYou" });
         console.log(response);
       })
-      .catch(err => {
+      .catch((err) => {
+        context.commit("setIsLoading", false);
+        context.commit("setCreateVolunteerFailed", true);
         console.log(err);
       });
   },
 
-  // generateToken(){
-  //   axios.post("http://localhost:7000/api/authtoken",{
-  //     username: 'Yuval',
-  //     password: 'admin',
-  //   },
-  //   {
-  //     headers: {
-  //       "Content-Type": "application/json",
-        
-  //     }
-  //   }
-  //   ).then(response =>{
-  //     console.log(response)
-  //   }).catch(err=>{
-  //     console.log(err)
-  //   })
-  // }
+  reqCreateHelpRequest(context) {
+    axios
+      .post(
+        context.rootState.baseAPIurl + "/api/createhelprequest/",
+        {
+          ...context.state.helpRequestFields,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+
+
+
+  // reqGetOpenHelpRequests(context) {
+  //   axios
+  //     .get(context.rootState.baseAPIurl + "/api/maphelprequests/", {
+  //       headers: {
+  //         Authorization: "Token " + context.rootState.hamalAuth.accessToken,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // },
+  reqGetAreas(context) {
+    axios
+      .get(context.rootState.baseAPIurl + "/api/areas/", {
+        headers: {
+          Authorization: "Token " + context.rootState.hamalAuth.accessToken,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+
+  reqCitiesAutoComplete(context, payload) {
+    let cityName = payload;
+
+    axios
+      .get(
+        context.rootState.baseAPIurl +
+          "/api/cityautocomplete/?name__startswith=" +
+          cityName
+      )
+      .then((response) => {
+        context.commit("setCitiesList", response.data);
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+
+
 };
 
 export default {
@@ -1056,5 +298,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };

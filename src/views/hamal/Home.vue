@@ -1,11 +1,14 @@
 <template>
   <v-container>
+    <div >
+
     <base-v-component
+    
       heading="ברוכים הבאים למערכת השליטה והבקרה של לב אחד"
     />
-
-    <stat-cards />
-    <stat-charts />
+    </div>
+    <stat-cards  />
+    <stat-charts  />
     
 
   </v-container>
@@ -17,7 +20,8 @@ import statCharts from "./components/StatCharts"
 export default {
   components:{
     statCards, statCharts
-  }
+  },
+
 }
   
 

@@ -1,7 +1,6 @@
 <template>
   <v-app id="inspire">
     <v-content>
-      <h2 v-if="wrongCred">Wrong credentials entered!. Please enter your correct details.</h2>
       <v-container
         class="fill-height"
         fluid
@@ -10,6 +9,14 @@
           align="center"
           justify="center"
         >
+      <h2 class="text-center red--text" v-if="wrongCred">שם משתמש או סיסמה לא נכונים. נסה שוב</h2>
+              <!-- <v-col cols="12">
+        <v-img
+          :src="require('../../assets/hamal-logo.png')"
+          contain
+          height="100"
+        />
+      </v-col> -->
           <v-col
             cols="12"
             sm="8"
@@ -21,14 +28,14 @@
                 dark
                 flat
               >
-                <v-toolbar-title>Login form</v-toolbar-title>
+                <v-toolbar-title>התחברות למערכת חמל</v-toolbar-title>
                 <v-spacer />
 
               </v-toolbar>
               <v-card-text>
                 <v-form v-on:submit.prevent="loginUser">
                   <v-text-field
-                    label="Login"
+                    label="שם משתמש"
                     name="login"
                     prepend-icon="mdi-account"
                     type="text"
@@ -37,7 +44,7 @@
 
                   <v-text-field
                     id="password"
-                    label="Password"
+                    label="סיסמה"
                     name="password"
                     prepend-icon="mdi-lock"
                     type="password"
@@ -47,7 +54,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn  @click="loginUser()" color="primary">Login</v-btn>
+                <v-btn  @click="loginUser()" color="primary">כניסה</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>

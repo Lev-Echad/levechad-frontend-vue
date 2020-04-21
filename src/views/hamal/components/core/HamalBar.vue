@@ -30,11 +30,10 @@
   import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
-    props: {
-      value: {
-        type: Boolean,
-        default: false,
-      },
+    data() {
+      return {
+        value: false,
+      }
     },
       computed: {
       drawer(){
@@ -43,9 +42,9 @@ export default {
     },
 
     methods: {
-      ...mapMutations({
-        setDrawer: 'hamal/SET_DRAWER',
-      }),
+      setDrawer(value){
+        this.$store.commit('hamal/SET_DRAWER', value)
+      }
     },
 };
 </script>

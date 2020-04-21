@@ -4,11 +4,15 @@ const state = {
   accessToken: localStorage.getItem("access_token") || null, // makes sure the user is logged in even after
   // refreshing the page
   APIData: "", // received data from the backend API is stored here.
-  isLoggedIn: false
+  isLoggedIn: false,
+  googleAPIkey: ''
 };
 const getters = {
   loggedIn(state) {
     return state.isLoggedIn;
+  },
+  googleAPIkey(state) {
+    return state.googleAPIkey;
   },
 };
 
@@ -28,6 +32,9 @@ const mutations = {
   },
   updateLogin(state, payload){
     state.isLoggedIn = payload;
+  },
+  googleAPIkey(state, payload){
+    state.googleAPIkey = payload;
   }
 };
 const actions = {
@@ -75,7 +82,7 @@ const actions = {
       // send the username and password to the backend API:
     //  axiosBase
     
-      axios.post(rootState.baseAPIurl+"/api/authtoken", {
+      axios.post(rootState.baseAPIurl+"/api/authtoken/", {
           username: credentials.username,
           password: credentials.password,
         })
@@ -94,7 +101,8 @@ const actions = {
   },
 
   checkToken({commit, rootState}){
-    return axios.get(rootState.baseAPIurl+"/api/volunteers/",{
+    commit("updateLogin", true) //first 
+     axios.get(rootState.baseAPIurl+"/api/volunteers/",{
       headers:{
         Authorization: "Token " + state.accessToken
       }
@@ -102,14 +110,49 @@ const actions = {
     //if successful update local storage:
     .then((response) => {
       commit("updateLogin", true)
- //     resolve(true)
     })
     .catch(err => {
       commit("updateLogin", false)
-    //  reject(false)
     })
-  }
+  },
+
+  // called from hamal master view 
+  // getGoogleAPIkey({commit, rootState}){
+  //    axios.get(rootState.baseAPIurl+"/api/getGoogleApiSecret/",{
+  //     headers:{
+  //       Authorization: "Token " + state.accessToken
+  //     }
+  //   } )
+  //   //if successful update local storage:
+  //   .then((response) => {
+  //     commit("googleAPIkey", response.secret_key)
+  //   })
+  //   .catch(err => {
+  //     commit("googleAPIkey", '')
+  //   })
+  // },
+  getGoogleAPIkey({commit, rootState}){
+    return new Promise((resolve, reject) => {
+      axios.get(rootState.baseAPIurl+"/api/getGoogleApiSecret/",{
+        headers:{
+          Authorization: "Token " + state.accessToken
+        }
+      } )
+      //if successful update local storage:
+      .then((response) => {
+        commit("googleAPIkey", response.data.secret_key)
+        resolve(response.data.secret_key)
+      })
+      .catch(err => {
+        commit("googleAPIkey", '')
+        reject('')
+      })
+    })
+
+  },
+
 };
+
 
 export default {
   // namespaced: true,

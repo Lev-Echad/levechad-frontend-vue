@@ -13,18 +13,32 @@
         fullscreenControl: false,
         disableDefaultUi: false,
       }"
-      style="width: 800px; height: 700px"
+      :styles="{
+        default: null,
+        hide: [
+          {
+            featureType: 'poi.business',
+            stylers: [{ visibility: 'off' }],
+          },
+          {
+            featureType: 'transit',
+            elementType: 'labels.icon',
+            stylers: [{ visibility: 'off' }],
+          },
+        ],
+      }"
+      style="width: 800px; height: 550px"
     >
       <GmapMarker
-        v-for="mission in missionList"
+        v-for="mission in mapPoints"
         :key="mission.id"
         :animation="2"
         :clickable="true"
         @click="toggleInfoWindow(mission)"
-        icon="https://cdn2.iconfinder.com/data/icons/happy-valentines-day-3/64/valentine_heart_love_pin_map_pointer_location-32.png"
+        :icon="getStatusIcon(mission.status)"
         :position="{
-          lat: mission.lat,
-          lng: mission.lng,
+          lat: mission.location_latitude,
+          lng: mission.location_longitude,
         }"
       />
 
@@ -40,8 +54,8 @@
 </template>
 
 <script>
+
 export default {
-  props: ["missionList"],
   components: {
     //  MissionCard: () => import("./components/missions/MissionCard"),
   },
@@ -63,8 +77,14 @@ export default {
   },
   methods: {
     toggleInfoWindow: function(marker, idx) {
-      this.$store.commit("hamal/setFocusedMission", marker);
-      this.infoWindowPos = { lat: marker.lat, lng: marker.lng };
+      //this.$store.commit("match/focusedMissionId", marker.id);
+      console.log(marker.id);
+      // this.$store.dispatch("match/reqBestMatch", marker.id);
+      this.$store.dispatch("match/reqFocusedMissionDetails", marker.id);
+      this.infoWindowPos = {
+        lat: marker.location_latitude,
+        lng: marker.location_longitude,
+      };
       let contentInfo = "<p> mission id </p><p>" + marker.id + "</p>";
       this.infoOptions.content = contentInfo;
 
@@ -78,6 +98,22 @@ export default {
         this.currentMidx = marker.id;
       }
     },
+    getStatusIcon(status) {
+      var icon = "red_marker.png";
+
+      switch (status) {
+        case "התקבלה":
+          icon = "red_marker.png";
+          break;
+        case "בטיפול":
+          icon = "orange_marker.png";
+          break;
+        case "הועבר למתנדב":
+          icon = "green_marker.png";
+          break;
+      }
+      return require("../../../assets/" + icon);
+    },
   },
 
   computed: {
@@ -86,9 +122,12 @@ export default {
         return this.$store.state.api.fousedMission;
       },
       set(marker) {
-       // toggleInfoWindow(marker, marker.id)
-      //  this.$store.commit("hamal/setFocusedMission", marker);
+        // toggleInfoWindow(marker, marker.id)
+        //  this.$store.commit("hamal/setFocusedMission", marker);
       },
+    },
+    mapPoints() {
+      return this.$store.getters["match/getMapPoints"];
     },
   },
 };

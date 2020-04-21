@@ -1,15 +1,16 @@
 <template>
 <v-container>
     <v-row>
+      <h1 @click="bringData()">asdads</h1>
       <v-col cols="12">
         <v-card >
-          <span class="headline">קומפוננטה של פילטר</span>
-        </v-card>
+          <MissionsFilter />
+                  </v-card>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12" lg="12">
-        <MissionsTable :missionList="missionList" />
+        <MissionsTable  />
       </v-col>
     </v-row>
     
@@ -21,14 +22,16 @@
 
 export default {
   components:{
-    MissionsTable: () => import("./components/missions/MissionsTable"),
+    MissionsTable: () => import("./components/missions/nTable"),
+    MissionsFilter: () => import("./components/missions/Filter"),
   },
-  computed:{
-    missionList(){
-      return this.$store.getters['api/getMissions']
-    },
 
-  },
+  methods:{
+    bringData(){
+      this.$store.dispatch('api/reqGetMissions')
+
+    }
+  }
 
 }
 </script>
