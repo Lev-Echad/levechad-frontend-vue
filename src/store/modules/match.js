@@ -168,68 +168,7 @@ const actions = {
       });
   },
 
-  // assignHelpRequestidToVol(context, payload) {
-  //   // let helprequest_id = (payload.helprequest_id!='' ||payload.helprequest_id=="undefined" ) ? context.state.focusedMissionId : payload.helprequest_id
-  //   let helprequest_id = context.state.focusedMissionId;
-  //   //let vol_id = payload.volunteer_id;
-  //   console.log("vol_id: " + vol_id);
-  //   context.commit("isLoading", true);
-  //   axios
-  //     .patch(
-  //       context.rootState.baseAPIurl +
-  //         "/api/updatehelprequest/" +
-  //         helprequest_id +
-  //         "/",
-  //       {
-  //         helping_volunteer: vol_id,
-  //         status: "TO_VOLUNTER",
-  //         status: "TO_VOLUNTER",
-  //         status: "TO_VOLUNTER",
-  //         status: "TO_VOLUNTER",
-  //       },
-  //       {
-  //         headers: {
-  //           "Authorization": "Token " + context.rootState.hamalAuth.accessToken,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     )
-  //     .then((response) => {
-  //        context.commit('focusedMissionDetails', response.data)
-  //        context.commit("isLoading", false)
-  //       console.log(response);
-  //     })
-  //     .catch((err) => {
-  //       context.commit("isLoading", false);
-  //       console.log(err);
-  //     });
-  // },
-};
-//   assignHelpRequestidToVol(context, payload){
-//     let helprequest_id = (payload.helprequest_id) ? payload.helprequest_id : context.state.focusedMissionId
-//     let vol_id = payload.volunteer_id
-//     context.commit("isLoading", true)
-//     axios
-//     .PATCH(context.rootState.baseAPIurl
-//     + "/api/volunteers/updatehelprequest/"
-//     +helprequest_id+"/?helping_volunteer"+vol_id
-//     +"&status=TO_VOLUNTER"
-//     , {
-//       headers: {
-//         Authorization: "Token " + context.rootState.hamalAuth.accessToken,
-//       },
-//     })
-//     .then((response) => {
-//    //   context.commit('bestVolunteers', response.data)
-//      // context.commit("isLoading", false)
-//       console.log(response);
-//     })
-//     .catch((err) => {
-//       context.commit("isLoading", false)
-//       console.log(err);
-//     });
-//   }
-// };
+
 
 export default {
   namespaced: true,

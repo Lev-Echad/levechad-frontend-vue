@@ -11,7 +11,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    baseAPIurl: "http://localhost:7000",
+    baseAPIurl: "https://live.levechad.org",
     helpTypes: [
       {
         value: "BUYIN",
