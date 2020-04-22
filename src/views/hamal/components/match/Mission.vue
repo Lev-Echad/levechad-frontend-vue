@@ -72,7 +72,7 @@
         </v-textarea>
       </v-col>
       <v-col cols="12">
-        <v-btn disabled="" raised class="success" @click="saveChanges()">
+        <v-btn  raised class="success" @click="saveChanges()">
           שמירה
         </v-btn>
       </v-col>
