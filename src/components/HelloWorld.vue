@@ -11,7 +11,7 @@
       </v-col>
       <v-col cols="12">
         <v-btn color="primary" class="ma-2" :to="{name: 'Citizen'}">
-        בקשת עזרה
+        טופס עזרה
         </v-btn>
         <v-btn  color="primary" class="ma-2" :to="{name: 'Volunteer'}">
           הרשמת מתנדב
