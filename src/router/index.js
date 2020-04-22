@@ -72,11 +72,7 @@ Vue.use(VueRouter)
           path: "missions",
           component: () => import("@/views/hamal/Missions")
       },
-      {
-          name: 'EasterEgg',
-          path: "EasterEgg",
-          component: () => import("@/views/hamal/components/Easter")
-      },
+
     ]
   },
   {
