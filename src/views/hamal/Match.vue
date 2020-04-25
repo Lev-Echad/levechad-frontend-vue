@@ -25,7 +25,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <h1 v-if="isLoading">טוען</h1>
+    <h1 v-if="isLoading">טוען </h1>
     <!-- <v-footer padless="" absolute="" inset>
       <MissionCard />
     </v-footer> -->
