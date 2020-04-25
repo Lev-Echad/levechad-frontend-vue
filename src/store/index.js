@@ -11,7 +11,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    baseAPIurl: process.env.API_URL,
+    baseAPIurl: process.env.VUE_APP_API_URL,
     helpTypes: [
       {
         value: "BUYIN",

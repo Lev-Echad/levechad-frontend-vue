@@ -16,7 +16,6 @@ Vue.config.productionTip = false
 store.dispatch('checkToken')
 
 
-
 store.dispatch('getGoogleAPIkey').then(res=>{
   Vue.use(VueGoogleMaps, {
     load: {
