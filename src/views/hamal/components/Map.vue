@@ -99,7 +99,7 @@ export default {
       }
     },
     getStatusIcon(status) {
-      var icon = "red_marker.png";
+      let icon = "red_marker.png";
 
       switch (status) {
         case "התקבלה":
