@@ -142,8 +142,8 @@ const actions = {
         context.commit("isLoading", false);
         // console.log(response);
         context.commit('focusedMissionHamalFields', response.data.results[0])
-      //  context.dispatch("reqBestMatch", );
-        this.reqBestMatch(helprequest_id)
+        context.dispatch("reqBestMatch", helprequest_id);
+      //  this.reqBestMatch()
       })
       .catch((err) => {
         context.commit("isLoading", false);
