@@ -4,6 +4,44 @@
       <v-text-field class="mb-0" v-if="getIsLoading" color="success" loading disabled></v-text-field>
     </div>
 
+    <v-snackbar v-model="isSnackbarVisible">
+      {{ getMessage }}
+      <v-btn color="primary" text @click="closeSnackbar()">Close</v-btn>
+    </v-snackbar>
+
+    <v-dialog v-model="dialogIsVisible" max-width="300">
+      <v-card>
+        <v-card-title
+          class="headline"
+        >האם ברצונך להקפיא את {{ getDialogVolunteer.first_name }} {{ getDialogVolunteer.last_name }} ?</v-card-title>
+
+        <v-card-text>בחר עד מתי להקפיא את המתנדב</v-card-text>
+
+        <v-col cols="12">
+          <v-menu
+            v-model="dateInput"
+            :close-on-content-click="false"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="200px"
+          >
+            <template v-slot:activator="{ on }">
+              <v-text-field v-model="dialogExpirationDate" label="תאריך תפוגה" readonly v-on="on"></v-text-field>
+            </template>
+            <v-date-picker v-model="dialogExpirationDate" @input="dateInput = false"></v-date-picker>
+          </v-menu>
+        </v-col>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn color="green darken-1" text @click="closeDialog()">סגור</v-btn>
+          <v-btn color="green darken-1" text @click="setVolunteerFreeze()">אישור</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <div class="filter-section">
       <span>סנן לפי</span>
 
@@ -105,7 +143,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in getVolunteers" :key="item.name">
+        <tr
+          class="table-row"
+          v-for="item in getVolunteers"
+          :key="item.name"
+          @click="onVolunteerClick(item)"
+        >
           <td>{{ item.tz_number }}</td>
           <td>{{ item.first_name }}</td>
           <td>{{ item.last_name }}</td>
@@ -144,22 +187,38 @@ export default {
       this.getFilterAreas === "" &&
       this.getFilterOrganization === ""
     ) {
-      this.$store.dispatch("loadFirstPage");
+      this.$store.dispatch("hamalVolunteers/loadFirstPage");
     }
   },
+  data: () => ({
+    date: new Date().toISOString().substr(0, 10),
+    dateInput: false
+  }),
   methods: {
     onFilterChange: _.debounce(function() {
-      this.$store.dispatch("loadFilteredVolunteers");
+      this.$store.dispatch("hamalVolunteers/loadFilteredVolunteers");
     }, 600),
+    onVolunteerClick(volunteer) {
+      this.$store.dispatch("hamalVolunteers/openNewDialog", volunteer);
+    },
+    closeDialog() {
+      this.$store.commit("hamalVolunteers/setDialogIsVisible", false);
+    },
+    closeSnackbar() {
+      this.$store.commit("hamalVolunteers/setIsSnackbarVisible", false);
+    },
+    setVolunteerFreeze() {
+      this.$store.dispatch("hamalVolunteers/setVolunteerFreeze");
+    },
     loadNextPage() {
-      this.$store.dispatch("loadNextPage");
+      this.$store.dispatch("hamalVolunteers/loadNextPage");
     },
     loadPreviousPage() {
-      this.$store.dispatch("loadPreviousPage");
+      this.$store.dispatch("hamalVolunteers/loadPreviousPage");
     }
   },
   computed: {
-    ...mapGetters([
+    ...mapGetters("hamalVolunteers", [
       "getVolunteers",
       "getAllVolunteersCount",
       "getShownResultsCount",
@@ -171,14 +230,19 @@ export default {
       "getFilterOrganization",
       "getCurrentPage",
       "getNextPage",
-      "getPreviousPage"
+      "getPreviousPage",
+      "getDialogIsVisible",
+      "getDialogVolunteer",
+      "getDialogExpirationDate",
+      "getMessage",
+      "getIsSnackbarVisible"
     ]),
     tz_number: {
       get() {
         return this.getFilterTz;
       },
       set(value) {
-        this.$store.commit("setFilterTz", value);
+        this.$store.commit("hamalVolunteers/setFilterTz", value);
       }
     },
     phone_number: {
@@ -186,7 +250,7 @@ export default {
         return this.getFilterPhone;
       },
       set(value) {
-        this.$store.commit("setFilterPhone", value);
+        this.$store.commit("hamalVolunteers/setFilterPhone", value);
       }
     },
     city: {
@@ -194,7 +258,7 @@ export default {
         return this.getFilterCity;
       },
       set(value) {
-        this.$store.commit("setFilterCity", value);
+        this.$store.commit("hamalVolunteers/setFilterCity", value);
       }
     },
     areas: {
@@ -202,7 +266,7 @@ export default {
         return this.getFilterAreas;
       },
       set(value) {
-        this.$store.commit("setFilterAreas", value);
+        this.$store.commit("hamalVolunteers/setFilterAreas", value);
       }
     },
     organization: {
@@ -210,7 +274,39 @@ export default {
         return this.getFilterOrganization;
       },
       set(value) {
-        this.$store.commit("setFilterOrganization", value);
+        this.$store.commit("hamalVolunteers/setFilterOrganization", value);
+      }
+    },
+    dialogIsVisible: {
+      get() {
+        return this.getDialogIsVisible;
+      },
+      set(value) {
+        this.$store.commit("hamalVolunteers/setDialogIsVisible", value);
+      }
+    },
+    dialogExpirationDate: {
+      get() {
+        return this.getDialogExpirationDate;
+      },
+      set(value) {
+        this.$store.commit("hamalVolunteers/setDialogExpirationDate", value);
+      }
+    },
+    message: {
+      get() {
+        return this.getMessage;
+      },
+      set(value) {
+        this.$store.commit("hamalVolunteers/setDialogMessage", value);
+      }
+    },
+    isSnackbarVisible: {
+      get() {
+        return this.getIsSnackbarVisible;
+      },
+      set(value) {
+        this.$store.commit("hamalVolunteers/setIsSnackbarVisible", value);
       }
     }
   }
@@ -233,6 +329,10 @@ export default {
 .table {
   border: 1px solid lightgray;
   margin: 14px;
+}
+
+.table-row {
+  cursor: pointer;
 }
 
 .pagination-container {

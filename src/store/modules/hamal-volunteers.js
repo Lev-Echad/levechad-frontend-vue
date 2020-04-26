@@ -3,6 +3,8 @@ import axios from "axios";
 const state = {
     isLoading: false,
     currentPage: 1,
+    isSnackbarVisible: false,
+    message: '',
     volunteers: {
         count: 0,
         next: null,
@@ -17,6 +19,12 @@ const state = {
         city: '',
         areas: '',
         organization: ''
+    },
+    dialog: {
+        isVisible: false,
+        isLoading: false,
+        volunteer: {},
+        expiration_date: '',
     }
 };
 
@@ -56,6 +64,21 @@ const getters = {
     },
     getPreviousPage: (state) => {
         return state.volunteers.previous;
+    },
+    getDialogIsVisible: (state) => {
+        return state.dialog.isVisible;
+    },
+    getDialogVolunteer: (state) => {
+        return state.dialog.volunteer;
+    },
+    getDialogExpirationDate: (state) => {
+        return state.dialog.expiration_date;
+    },
+    getMessage: (state) => {
+        return state.message;
+    },
+    getIsSnackbarVisible: (state) => {
+        return state.isSnackbarVisible;
     }
 };
 
@@ -83,7 +106,22 @@ const mutations = {
     },
     setCurrentPage(state, value) {
         state.currentPage = value;
-    }
+    },
+    setDialogIsVisible(state, value) {
+        state.dialog.isVisible = value;
+    },
+    setDialogVolunteer(state, value) {
+        state.dialog.volunteer = value;
+    },
+    setDialogExpirationDate(state, value) {
+        state.dialog.expiration_date = value;
+    },
+    setMessage(state, value) {
+        state.message = value;
+    },
+    setIsSnackbarVisible(state, value) {
+        state.isSnackbarVisible = value;
+    },
 };
 
 const actions = {
@@ -170,10 +208,38 @@ const actions = {
         } catch (err) {
             console.log(err);
         }
+    },
+    async setVolunteerFreeze({ commit, rootState, state }) {
+        try {
+            const data = {
+                "volunteer": state.dialog.volunteer.id,
+                "expiration_date": state.dialog.expiration_date
+            };
+            const response = await axios.post(`${rootState.baseAPIurl}/api/SetVolunteerFreeze/`, data,
+                {
+                    headers: {
+                        Authorization: "Token " + rootState.hamalAuth.accessToken,
+                    }
+                }
+            )
+            commit('setMessage', `קביעת תאריך נקבעה בהצלחה ל ${response.data.expiration_date}`);
+            commit('setIsSnackbarVisible', true);
+            commit('setDialogIsVisible', false);
+        } catch (err) {
+            commit('setMessage', 'שגיאה, נסה לבחור תאריך אחר.');
+            commit('setIsSnackbarVisible', true);
+            commit('setDialogIsVisible', false);
+        }
+    },
+    openNewDialog({ commit }, volunteer) {
+        commit('setDialogIsVisible', true);
+        commit('setDialogVolunteer', volunteer);
+        commit('setDialogExpirationDate', '');
     }
 };
 
 export default {
+    namespaced: true,
     state,
     getters,
     actions,
