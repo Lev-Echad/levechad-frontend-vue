@@ -5,7 +5,7 @@
       <v-row>
         <v-col cols="12">
           <v-card>
-            <!-- <MatchFilter /> -->
+            <MatchFilter />
           </v-card>
         </v-col>
       </v-row>
@@ -25,7 +25,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <h1 v-if="isLoading">טוען</h1>
+    <h1 v-if="isLoading">טוען </h1>
     <!-- <v-footer padless="" absolute="" inset>
       <MissionCard />
     </v-footer> -->

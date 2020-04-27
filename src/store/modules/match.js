@@ -2,6 +2,8 @@ import axios from "axios";
 
 const state = {
   mapPoints: [],
+  openHelpRequests: [],
+
   focusedMissionId: "",
   focusedMissionDetails: {},
   bestVolunteers: [],
@@ -12,11 +14,18 @@ const state = {
     notes:'',
   },
 
+
+
+
 };
 const getters = {
   getMapPoints(state) {
     return state.mapPoints;
   },
+  openHelpRequests(state) {
+    return state.openHelpRequests;
+  },
+
   focusedMissionDetails(state) {
     return state.focusedMissionDetails;
   },
@@ -32,6 +41,13 @@ const getters = {
   HamalHelpRequestFields(state) {
     return state.HamalHelpRequestFields;
   },
+  getHelpRequestById(state){
+    return helprequest_id=>{
+      state.mapPoints.filter(mapPoint =>{
+        return mapPoint.id = helprequest_id
+      })
+    }
+  }
 };
 
 const mutations = {
@@ -127,6 +143,7 @@ const actions = {
         // console.log(response);
         context.commit('focusedMissionHamalFields', response.data.results[0])
         context.dispatch("reqBestMatch", helprequest_id);
+      //  this.reqBestMatch()
       })
       .catch((err) => {
         context.commit("isLoading", false);
