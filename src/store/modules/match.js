@@ -10,17 +10,24 @@ const state = {
   isLoading: false,
   HamalHelpRequestFields:{
     status:'',
-    volunteer_id:'',
+    id:'',
+    city:'',
     notes:'',
   },
-
-
-
-
 };
 const getters = {
   getMapPoints(state) {
     return state.mapPoints;
+  },
+  getMapPointsFilterByCity(state) {
+    return keyword => state.mapPoints.filter(mapPoint =>{
+      return mapPoint.city === keyword
+    });
+  },
+  getMapPointsFilterByStatus(state) {
+    return keyword => state.mapPoints.filter(mapPoint =>{
+      return mapPoint.status === keyword
+    });
   },
   openHelpRequests(state) {
     return state.openHelpRequests;
@@ -41,13 +48,12 @@ const getters = {
   HamalHelpRequestFields(state) {
     return state.HamalHelpRequestFields;
   },
-  getHelpRequestById(state){
-    return helprequest_id=>{
-      state.mapPoints.filter(mapPoint =>{
-        return mapPoint.id = helprequest_id
-      })
-    }
-  }
+  getHelpRequestById(state) {
+    return helprequest_id => state.mapPoints.filter(mapPoint =>{
+      console.log(mapPoint);
+      return mapPoint.id == helprequest_id
+    });
+  },
 };
 
 const mutations = {
@@ -80,6 +86,7 @@ const mutations = {
   },
 };
 const actions = {
+  // get all help request 
   reqGetOpenHelpRequests(context) {
     axios
       .get(context.rootState.baseAPIurl + "/api/maphelprequests/", {
@@ -95,7 +102,7 @@ const actions = {
         console.log(err);
       });
   },
-
+  // find best match per mission id
   reqBestMatch(context, helprequest_id) {
     if (helprequest_id) {
       context.commit("isLoading", true);
@@ -150,6 +157,7 @@ const actions = {
         console.log(err);
       });
   },
+  // update
   updateHelpRequest(context) {
     // let helprequest_id = (payload.helprequest_id!='' ||payload.helprequest_id=="undefined" ) ? context.state.focusedMissionId : payload.helprequest_id
     let helprequest_id = context.state.focusedMissionId;
