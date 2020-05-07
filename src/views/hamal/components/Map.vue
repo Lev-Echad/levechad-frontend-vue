@@ -2,16 +2,25 @@
   <div>
         <v-row  align="center">
 
-    <v-col cols="12" sm="4" class="">
+    <v-col cols="12" sm="2" class="">
       <v-text-field
         v-model="serach_id"
         :counter="10"
         :search-input.sync="serach_id"
-        label="חפש לפי id"
+        label="id"
         required
       ></v-text-field>
     </v-col>
-    <v-col cols="12" sm="4">
+      <v-col cols="12" sm="3" class="">
+      <v-text-field
+        v-model="serach_phone"
+        :counter="10"
+        :search-input.sync="serach_phone"
+        label= "טלפון"
+        required
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" sm="3">
       <v-autocomplete
         v-model="serach_city"
         :items="items"
@@ -19,9 +28,9 @@
         :search-input.sync="search"
         hide-no-data
         label="עיר"
-        placeholder="מיין לפי עיר"
+        placeholder="סנן לפי עיר"
         prepend-icon="mdi-city"
-        no-data-text="שדג"
+        no-data-text=""
         cache-items
       ></v-autocomplete>
     </v-col>
@@ -39,6 +48,9 @@
       ]"> 
       </v-select>
     </v-col>
+            <v-btn  @click="refresh()" color="secondary" fab x-small dark>
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
     </v-row>
 
     <GmapMap ref="mapRef"
@@ -106,6 +118,7 @@ export default {
       currentMidx: null,
       search:null,
       serach_id:null,
+      serach_phone:null,
       serach_city:null,
       serach_status:null,
       isLoading: false,
@@ -120,6 +133,9 @@ export default {
     };
   },
   methods: {
+    refresh(){
+      this.mapPoints =this.$store.getters["match/getMapPoints"];
+    },
     toggleInfoWindow: function(marker, idx) {
       console.log(marker.id);
       this.$store.dispatch("match/reqFocusedMissionDetails", marker.id);
@@ -168,6 +184,9 @@ export default {
     },
     serach_id(val) {
       this.mapPoints = this.$store.getters["match/getHelpRequestById"](val);
+    },
+    serach_phone(val) {
+      this.mapPoints = this.$store.getters["match/getHelpRequestByPhone"](val);
     },
     serach_status(val) {
       this.mapPoints = this.$store.getters["match/getMapPointsFilterByStatus"](val);
