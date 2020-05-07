@@ -98,6 +98,32 @@ const actions = {
         console.log(err);
       });
   },
+  async updatehelprequest({ commit, rootState, state },helpRequests) {
+    try {
+      console.log(helpRequests);
+        const data = {
+            "status":helpRequests.status,
+            "id": helpRequests.id,
+            "city": helpRequests.city.name,
+            "notes": helpRequests.notes,
+        };
+        const response = await axios.patch(`${rootState.baseAPIurl}/api/updatehelprequest/${helpRequests.id}/`, data,
+            {
+                headers: {
+                    Authorization: "Token " + rootState.hamalAuth.accessToken,
+                }
+            }
+        )
+        //commit('setMessage', 'המשימה עודכנה בהצלחה');
+       // commit('setIsSnackbarVisible', true);
+        //commit('setDialogIsVisible', false);
+    } catch (err) {
+        console.log(err);
+        //commit('setMessage', 'שגיאה');
+        //commit('setIsSnackbarVisible', true);
+        //commit('setDialogIsVisible', false);
+    }
+},
 };
 
 export default {

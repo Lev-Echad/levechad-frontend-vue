@@ -46,7 +46,7 @@ const state = {
   helpRequestFields: {
     full_name: "",
     phone_number: "",
-    city: null,
+    city: "",
     address: "",
     notes: "",
     type: null,

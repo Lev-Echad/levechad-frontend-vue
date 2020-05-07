@@ -1,7 +1,7 @@
 <template>
 <v-container>
     <v-row>
-      <h1 @click="bringData()">asdads</h1>
+      <h1 @click="bringData()">משימות</h1>
       <v-col cols="12">
         <v-card >
           <MissionsFilter />

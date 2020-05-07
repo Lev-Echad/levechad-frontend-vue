@@ -36,9 +36,9 @@ export default {
         { title: "ביצוע שידוכים", icon: "mdi-handshake", to: "HamalMatch" },
         { title: "מתנדבים", icon: "mdi-account", to: "HamalVolunteers" },
         { title: "משימות", icon: "mdi-alarm-light", to: "HamalMissions" },
-        { title: "תצוגת מפה", icon: "mdi-map", to: "HamalMissions" },
-        { title: "פרויקטים", icon: "mdi-alarm-light", to: "HamalMissions" },
-        { title: "הודעות ועדכונים", icon: "mdi-message", to: "HamalMissions" },
+        // { title: "תצוגת מפה", icon: "mdi-map", to: "HamalMissions" },
+        // { title: "פרויקטים", icon: "mdi-alarm-light", to: "HamalMissions" },
+        // { title: "הודעות ועדכונים", icon: "mdi-message", to: "HamalMissions" },
       ],
     };
   },

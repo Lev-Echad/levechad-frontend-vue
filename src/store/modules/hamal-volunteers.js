@@ -84,6 +84,7 @@ const getters = {
 
 const mutations = {
     setVolunteers(state, volunteers) {
+        console.log(volunteers);
         state.volunteers = volunteers;
     },
     setIsLoading(state, isLoading) {
@@ -227,6 +228,37 @@ const actions = {
             commit('setDialogIsVisible', false);
         } catch (err) {
             commit('setMessage', 'שגיאה, נסה לבחור תאריך אחר.');
+            commit('setIsSnackbarVisible', true);
+            commit('setDialogIsVisible', false);
+        }
+    },
+    async updatevolunteer({ commit, rootState, state },volunteer) {
+        try {
+            console.log(volunteer.id);
+            console.log(volunteer);
+            let v = volunteer;
+            const data = {
+                "tz_number":v.tz_number,
+                "first_name": v.first_name,
+                "last_name": v.last_name,
+                "city": v.city.name,
+                "address": v.address,
+                "phone_number": v.phone_number,
+                "email": v.email,
+            };
+            const response = await axios.patch(`${rootState.baseAPIurl}/api/updatevolunteer/${volunteer.id}/`, data,
+                {
+                    headers: {
+                        Authorization: "Token " + rootState.hamalAuth.accessToken,
+                    }
+                }
+            )
+            commit('setMessage', 'מתנדב עודכן בהצלחה');
+            commit('setIsSnackbarVisible', true);
+            commit('setDialogIsVisible', false);
+        } catch (err) {
+            console.log(err);
+            commit('setMessage', 'שגיאה');
             commit('setIsSnackbarVisible', true);
             commit('setDialogIsVisible', false);
         }
