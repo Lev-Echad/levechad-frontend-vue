@@ -11,8 +11,10 @@ const state = {
   HamalHelpRequestFields:{
     status:'',
     id:'',
+    phone_number:'',
     city:'',
     notes:'',
+    
   },
 };
 const getters = {
@@ -50,8 +52,14 @@ const getters = {
   },
   getHelpRequestById(state) {
     return helprequest_id => state.mapPoints.filter(mapPoint =>{
-      console.log(mapPoint);
+     // console.log(mapPoint);
       return mapPoint.id == helprequest_id
+    });
+  },
+  getHelpRequestByPhone(state) {
+    return helprequest_phone => state.mapPoints.filter(mapPoint =>{
+     // console.log(mapPoint);
+      return mapPoint.phone_number == helprequest_phone
     });
   },
 };
@@ -163,7 +171,6 @@ const actions = {
     let helprequest_id = context.state.focusedMissionId;
     //let vol_id = payload.volunteer_id;
     //console.log("vol_id: " + vol_id);
-    console.log(context.state.HamalHelpRequestFields);
     context.commit("isLoading", true);
     axios
       .patch(

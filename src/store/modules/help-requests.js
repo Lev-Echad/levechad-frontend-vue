@@ -12,9 +12,8 @@ const state = {
     page: 1,
     pageSize: 4,
     id: '',
-    areas:[]
-    
-    
+    areas:[],
+    phone_number:''
   },
   areas:''
 };
@@ -34,6 +33,9 @@ const getters = {
   areas(state){
     return state.areas
   },
+  phone_number(state){
+    return state.phone_number
+  },
 };
 
 const mutations = {
@@ -49,7 +51,7 @@ const mutations = {
   },
   areas(state, payload){
     state.areas = payload
-  }
+  },
 
 };
 const actions = {
@@ -74,14 +76,29 @@ const actions = {
   },
   reqHelpRequests(context) {
     context.commit("isLoading", true)
-    var {status, page, pageSize, id, areas} = context.state.filters
+    var {status, page, pageSize, id, areas,phone_number} = context.state.filters
+    if(typeof(status) == 'undefined' || status == null) {
+      status =''
+    }
+    if(typeof(id) == 'undefined' || id == null) {
+      id =''
+    } 
+    if(typeof(phone_number) == 'undefined' || phone_number == null) {
+      phone_number =''
+    } 
+    if(typeof(phone_number) == 'undefined' || phone_number == null) {
+      phone_number =''
+    } 
+
     axios
       .get(context.rootState.baseAPIurl + "/api/helprequests/?"
       +"status__in="+status
       +"&id="+id
       +"&page="+page
       +"&pageSize="+pageSize
+      +"&phone_number="+phone_number
       +"&city__region__in="+areas
+      
       , {
         headers: {
           Authorization: "Token " + context.rootState.hamalAuth.accessToken,

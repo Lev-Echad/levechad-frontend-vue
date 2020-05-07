@@ -133,13 +133,10 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.tz_number" label=תז></v-text-field>
+                    <v-text-field v-model="editedItem.first_name" label="שם פרטי"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.first_name" label="פרטי"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.last_name" label="משפחה"></v-text-field>
+                    <v-text-field v-model="editedItem.last_name" label="שם משפחה"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.phone_number" label="פלא"></v-text-field>

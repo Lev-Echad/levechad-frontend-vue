@@ -16,7 +16,7 @@
         <v-col cols="12" lg="5">
           <PotentialVolunteers />
         </v-col>
-        <v-col cols="2">
+        <v-col  md="2">
           <v-card class="px-3" >
              <MissionOps />
           </v-card>
