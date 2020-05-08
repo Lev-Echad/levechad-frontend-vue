@@ -220,7 +220,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="onFilterChange()">Reset</v-btn>
+      <v-btn color="primary" @click="reset()">Reset</v-btn>
     </template>
     </v-data-table>  
   </div>
@@ -234,15 +234,7 @@ import _ from "lodash";
 
 export default {
   mounted() {
-    if (
-      this.getFilterTz === "" &&
-      this.getFilterPhone === "" &&
-      this.getFilterCity === "" &&
-      this.getFilterAreas === "" &&
-      this.getFilterOrganization === ""
-    ) {
-      this.$store.dispatch("hamalVolunteers/loadFirstPage");
-    }
+    this.$store.dispatch("hamalVolunteers/loadFirstPage");
   },
    data: () => ({
      dialog: false,
@@ -304,9 +296,12 @@ export default {
       },
     }),
   methods: {
+    reset(){
+      this.$store.dispatch("hamalVolunteers/loadFirstPage");
+    },
     onFilterChange: _.debounce(function() {
       this.$store.dispatch("hamalVolunteers/loadFilteredVolunteers");
-    }, 600),
+    }, 100),
     onVolunteerClick(volunteer) {
       console.log(volunteer)
       this.$store.dispatch("hamalVolunteers/openNewDialog", volunteer);

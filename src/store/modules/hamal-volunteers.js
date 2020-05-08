@@ -84,7 +84,7 @@ const getters = {
 
 const mutations = {
     setVolunteers(state, volunteers) {
-        console.log(volunteers);
+        // console.log(volunteers);
         state.volunteers = volunteers;
     },
     setIsLoading(state, isLoading) {

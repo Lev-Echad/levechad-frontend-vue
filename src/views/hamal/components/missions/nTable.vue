@@ -85,7 +85,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
+      <!-- <v-btn color="primary" @click="initialize">Reset</v-btn> -->
     </template>
   </v-data-table>
 </template>
@@ -96,6 +96,7 @@
       totalDesserts: 0,
       loading: true,
       options: {},
+      dialog:null,
       headers: [
         { text: "מס'", value: "id" },
         { text: "סטטוס", value: "status" },
@@ -172,9 +173,9 @@
       },
     },
 
-    created () {
-      this.initialize()
-    },
+    // created () {
+    //   this.initialize()
+    // },
 
     methods: {
       editItem (item) {
