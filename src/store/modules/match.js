@@ -97,7 +97,7 @@ const actions = {
   // get all help request 
   reqGetOpenHelpRequests(context) {
     axios
-      .get(context.rootState.baseAPIurl + "/api/maphelprequests/", {
+      .get(context.rootState.baseAPIurl + "/api/maphelprequests/?status__in=IN_CARE%2CWATING%2CTO_VOLUNTER", {
         headers: {
           Authorization: "Token " + context.rootState.hamalAuth.accessToken,
         },
