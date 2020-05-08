@@ -9,6 +9,8 @@ Vue.use(vPlayBack);
 import vuetify from './plugins/vuetify';
 import * as VueGoogleMaps from 'vue2-google-maps'
 import moment from 'moment'
+import JsonExcel from 'vue-json-excel'
+Vue.component('downloadExcel', JsonExcel)
 
 Vue.prototype.moment = moment
 moment.locale(); 

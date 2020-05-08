@@ -63,13 +63,16 @@
           ></v-text-field>
         </v-col>
         <v-col cols="2">
-          <v-text-field
-            v-model="city"
-            label="עיר"
-            outlined
-            append-icon="mdi-city"
-            @keyup="onFilterChange()"
-          ></v-text-field>
+        <v-autocomplete
+          v-model="city_filter"
+          outlined
+          :items="city_list"
+          :search-input.sync="search"
+          clearable
+          label="עיר"
+          append-icon="mdi-city"
+          @keyup="onFilterChange()"
+      ></v-autocomplete>
         </v-col>
         <v-col cols="2">
           <v-text-field
@@ -116,13 +119,40 @@
         >מציג {{ getAllVolunteersCount }}-{{ 30 * (getCurrentPage - 1) + 1 }} מתוך {{ getAllVolunteersCount }} מתנדבים</span>
       </div>
     </div>
+    <v-row>
+            <div class="pl-3"></div>
+
+        <v-toolbar flat color="white">
+        <v-toolbar-title>מתנדבים</v-toolbar-title>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
+      <div class="pl-3"></div>
+      <v-chip class="pl-3 m-12">
+      <download-excel
+        :data="volunteers"
+        name = "מתנדבים.xls"
+        :fields ="excel_fields"
+      >
+        יצא לאקסל
+      <v-icon
+          small
+          class="mr-2"
+        >
+          mdi-download
+        </v-icon>
+      </download-excel>
+      </v-chip>
+        </v-toolbar>
+    </v-row>
 
     <v-data-table
       :headers="headers"
       :items="volunteers"
       sort-by="tz_number"
       class="table"
-      @click:row="onVolunteerClick"
       single-select>
       <template v-slot:top>
         <v-spacer></v-spacer>
@@ -144,7 +174,12 @@
                     <v-text-field v-model="editedItem.phone_number" label="פלא"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.city.name" label="עיר"></v-text-field>
+                  <v-autocomplete
+                    v-model="editedItem.city.name"
+                    :items="city_list"
+                    :search-input.sync="search2"
+                    label="עיר"
+                ></v-autocomplete>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.address" label="כתובת"></v-text-field>
@@ -175,11 +210,21 @@
         mdi-pencil
       </v-icon>
     </template>
+    <template v-slot:item.freeze="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="onVolunteerClick(item)"
+      >
+        mdi-snowflake
+      </v-icon>
+    </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="volunteers">Reset</v-btn>
+      <v-btn color="primary" @click="onFilterChange()">Reset</v-btn>
     </template>
     </v-data-table>  
   </div>
+  
 </template>
 
 <script>
@@ -204,8 +249,11 @@ export default {
       loading: true,
       options: {},
       dateInput: false,
+      search:null,
+      search2:null,
       headers: [
         { text: 'עריכה', value: 'actions', sortable: false },
+        { text: 'הקפאה', value: 'freeze', sortable: false },
         { text: "תעודת זהות'", value: "tz_number" },
         { text: "שם פרטי", value: "first_name" },
         { text: "שם משפחה", value: "last_name" },
@@ -225,6 +273,23 @@ export default {
         { text: 'כמות פעמים', value: 'times_volunteered'},
         { text: 'שפות', value: 'languages'},
       ],
+      excel_fields: {
+        "תעודת זהות":"tz_number",
+        "אימייל":"email",
+        " שם פרטי":"first_name",
+        " שם משפחה":"last_name",
+        " טלפון":"phone_number",
+        " תאריך לידה":"date_of_birth",
+        " מין":"gender",
+        " עיר":"city.name",
+        " כתובת":"address",
+        " חמל":"areas",
+        " ארגון":"organization",
+        " התניידות":"moving_way",
+        " משימות בשבוע":"week_assignments_capacity",
+        " משימות":"times_volunteered",
+        " שפות":"languages",
+      },
       editedIndex: -1,
       editedItem: {
         tz_number: '',
@@ -237,22 +302,12 @@ export default {
         created_date: 0,
         actions:0
       },
-      defaultItem: {
-        tz_number: '',
-        status: 0,
-        full_name: 0,
-        city: 0,
-        address: 0,
-        reason: 0,
-        created_date: 0,
-        actions:0
-      },
     }),
   methods: {
     onFilterChange: _.debounce(function() {
       this.$store.dispatch("hamalVolunteers/loadFilteredVolunteers");
     }, 600),
-    onVolunteerClick(volunteer,row) {
+    onVolunteerClick(volunteer) {
       console.log(volunteer)
       this.$store.dispatch("hamalVolunteers/openNewDialog", volunteer);
     },
@@ -293,11 +348,29 @@ export default {
     },
   },
   watch: {
+    search(val) {
+      if (val) {
+        if (val.length > 1) {
+          this.$store.dispatch("api/reqCitiesAutoComplete", val);
+        }
+      }
+    },
+    search2(val) {
+      if (val) {
+        if (val.length > 1) {
+          this.$store.dispatch("api/reqCitiesAutoComplete", val);
+        }
+      }
+    },
     dialog (val) {
         val || this.close()
       },
     },
   computed: {
+    city_list() {
+      let resCitiesList = this.$store.getters["api/getCitiesList"];
+      return resCitiesList;
+    },
     volunteers(){
         return this.$store.getters["hamalVolunteers/getVolunteers"];
 
@@ -340,7 +413,7 @@ export default {
         this.$store.commit("hamalVolunteers/setFilterPhone", value);
       }
     },
-    city: {
+    city_filter: {
       get() {
         return this.getFilterCity;
       },

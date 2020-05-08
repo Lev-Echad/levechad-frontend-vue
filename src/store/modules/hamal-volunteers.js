@@ -16,7 +16,7 @@ const state = {
         last_name: '',
         phone_number: '',
         tz_number: '',
-        city: '',
+        city_filter: '',
         areas: '',
         organization: ''
     },
@@ -97,7 +97,7 @@ const mutations = {
         state.filter.tz_number = value;
     },
     setFilterCity(state, value) {
-        state.filter.city = value;
+        state.filter.city_filter = value;
     },
     setFilterAreas(state, value) {
         state.filter.areas = value;
@@ -144,8 +144,9 @@ const actions = {
     },
     async loadFilteredVolunteers({ commit, dispatch, rootState, state }) {
         commit('setIsLoading', true);
-        if (!state.filter.phone_number && !state.filter.tz_number && !state.filter.city && !state.filter.areas && !state.filter.organization) {
+        if (!state.filter.phone_number && !state.filter.tz_number && !state.filter.city_filter && !state.filter.areas && !state.filter.organization) {
             dispatch('loadFirstPage');
+            commit('setIsLoading', false);
             return;
         }
         try {
@@ -154,7 +155,7 @@ const actions = {
                     params: {
                         phone_number: state.filter.phone_number,
                         tz_number: state.filter.tz_number,
-                        city: state.filter.city,
+                        city: state.filter.city_filter,
                         areas: state.filter.areas,
                         organization: state.filter.organization
                     },
@@ -234,8 +235,8 @@ const actions = {
     },
     async updatevolunteer({ commit, rootState, state },volunteer) {
         try {
-            console.log(volunteer.id);
-            console.log(volunteer);
+            //console.log(volunteer.id);
+            //console.log(volunteer);
             let v = volunteer;
             const data = {
                 "tz_number":v.tz_number,
