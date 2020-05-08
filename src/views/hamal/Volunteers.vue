@@ -121,7 +121,9 @@
       :headers="headers"
       :items="volunteers"
       sort-by="tz_number"
-      class="table">
+      class="table"
+      @click:row="onVolunteerClick"
+      single-select>
       <template v-slot:top>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
@@ -156,7 +158,6 @@
                 </v-row>
               </v-container>
             </v-card-text>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">ביטול</v-btn>
@@ -251,7 +252,8 @@ export default {
     onFilterChange: _.debounce(function() {
       this.$store.dispatch("hamalVolunteers/loadFilteredVolunteers");
     }, 600),
-    onVolunteerClick(volunteer) {
+    onVolunteerClick(volunteer,row) {
+      console.log(volunteer)
       this.$store.dispatch("hamalVolunteers/openNewDialog", volunteer);
     },
     closeDialog() {
