@@ -192,6 +192,8 @@ export default {
         this.refresh()
       }else{
         this.mapPoints = this.$store.getters["match/getHelpRequestById"](val);
+        this.$store.dispatch("match/reqFocusedMissionDetails", val);
+
       }
     },
     serach_phone(val) {
