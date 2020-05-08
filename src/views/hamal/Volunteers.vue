@@ -51,6 +51,7 @@
             outlined
             append-icon="mdi-account-details"
             @keyup="onFilterChange()"
+            @change="onFilterChange()"
           ></v-text-field>
         </v-col>
         <v-col cols="3">
@@ -60,6 +61,7 @@
             outlined
             append-icon="mdi-phone"
             @keyup="onFilterChange()"
+            @change="onFilterChange()"
           ></v-text-field>
         </v-col>
         <v-col cols="2">
@@ -72,6 +74,7 @@
           label="עיר"
           append-icon="mdi-city"
           @keyup="onFilterChange()"
+          @change="onFilterChange()"
       ></v-autocomplete>
         </v-col>
         <v-col cols="2">
@@ -81,6 +84,7 @@
             outlined
             append-icon="mdi-desktop-classic"
             @keyup="onFilterChange()"
+            @change="onFilterChange()"
           ></v-text-field>
         </v-col>
         <v-col cols="2">
@@ -90,6 +94,7 @@
             outlined
             append-icon="mdi-home-modern"
             @keyup="onFilterChange()"
+            @change="onFilterChange()"
           ></v-text-field>
         </v-col>
       </v-row>
