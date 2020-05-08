@@ -5,7 +5,7 @@
       <v-row>
         <v-col cols="12">
           <v-card>
-            <MatchFilter />
+            <!-- <MatchFilter /> -->
           </v-card>
         </v-col>
       </v-row>
@@ -16,10 +16,8 @@
         <v-col cols="12" lg="5">
           <PotentialVolunteers />
         </v-col>
-          
-        <v-col cols="2">
+        <v-col  md="2">
           <v-card class="px-3" >
-
              <MissionOps />
           </v-card>
         </v-col>
@@ -34,17 +32,27 @@
 
 <script>
 export default {
+  watch: {
+    search(val) {
+      if (val) {
+        if (val.length > 1) {
+          this.$store.dispatch("api/reqCitiesAutoComplete", val);
+        }
+      }
+      console.log(this.$store.getters["match/getMapPointsFilterByCity"](val));
+    },
+  },
   components: {
     PotentialVolunteers: () => import("./components/match/PotentialVolunteers"),
     MissionOps: () => import("./components/match/Mission"),
-    MatchFilter: () => import("./components/match/Filter"),
+    // MatchFilter: () => import("./components/match/Filter"),
     Map: () => import("./components/Map"),
     MissionCard: () => import("./components/missions/MissionCard"),
   },
   computed: {
-    // missionList(){
-    //   return this.$store.getters['api/getMissions']
-    // },
+    missionList(){
+      return this.$store.getters['api/getMissions']
+    },
     isLoading() {
       return this.$store.getters["match/isLoading"];
     },

@@ -29,6 +29,7 @@ export default {
         { text: "איזור", value: "area" },
         { text: "סיבה", value: "reason" },
         { text: "שם מלא", value: "full_name" },
+        { text: "טלפון", value: "phone_number" },
         { text: "מועד פתיחה", value: "timestamp" },
         { text: "Fat (g)", value: "city" },
       ],

@@ -1,6 +1,59 @@
 <template>
   <div>
-    <GmapMap
+        <v-row  align="center">
+
+    <v-col cols="12" sm="2" class="">
+      <v-text-field
+        v-model="serach_id"
+        :counter="10"
+        :search-input.sync="serach_id"
+        label="id"
+        required
+      ></v-text-field>
+    </v-col>
+      <v-col cols="12" sm="3" class="">
+      <v-text-field
+        v-model="serach_phone"
+        :counter="10"
+        :search-input.sync="serach_phone"
+        label= "טלפון"
+        required
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" sm="3">
+      <v-autocomplete
+        v-model="serach_city"
+        :items="items"
+        :loading="isLoading"
+        :search-input.sync="search"
+        hide-no-data
+        label="עיר"
+        placeholder="סנן לפי עיר"
+        prepend-icon="mdi-city"
+        no-data-text=""
+        cache-items
+      ></v-autocomplete>
+    </v-col>
+    <v-col cols="12" sm="3">
+      <v-select 
+      clearable label="סטטוס" 
+      v-model="serach_status" 
+      :search-input.sync="serach_status"
+      :items="[
+      'התקבלה',
+      'בטיפול',
+      'הועבר למתנדב',
+      'סיום טיפול',
+      'לא רלוונטי',
+      ]"> 
+      </v-select>
+    </v-col>
+            <v-btn  @click="refresh()" color="secondary" fab x-small dark>
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+    </v-row>
+
+    <GmapMap ref="mapRef"
       :center="{ lat: 32, lng: 35 }"
       :zoom="9"
       map-type-id="terrain"
@@ -57,17 +110,21 @@
 
 export default {
   components: {
-    //  MissionCard: () => import("./components/missions/MissionCard"),
   },
   data() {
     return {
       infoWindowPos: null,
       infoWinOpen: false,
       currentMidx: null,
-
+      search:null,
+      serach_id:null,
+      serach_phone:null,
+      serach_city:null,
+      serach_status:null,
+      isLoading: false,
+      mapPoints : this.$store.getters["match/getMapPoints"],
       infoOptions: {
         content: "",
-        //optional: offset infowindow so it visually sits nicely on top of our marker
         pixelOffset: {
           width: 0,
           height: -35,
@@ -76,10 +133,11 @@ export default {
     };
   },
   methods: {
+    refresh(){
+      this.mapPoints =this.$store.getters["match/getMapPoints"];
+    },
     toggleInfoWindow: function(marker, idx) {
-      //this.$store.commit("match/focusedMissionId", marker.id);
       console.log(marker.id);
-      // this.$store.dispatch("match/reqBestMatch", marker.id);
       this.$store.dispatch("match/reqFocusedMissionDetails", marker.id);
       this.infoWindowPos = {
         lat: marker.location_latitude,
@@ -115,8 +173,30 @@ export default {
       return require("../../../assets/" + icon);
     },
   },
-
+  watch: {
+    search(val) {
+      if (val) {
+        if (val.length > 1) {
+          this.$store.dispatch("api/reqCitiesAutoComplete", val);
+        }
+      }
+      this.mapPoints = this.$store.getters["match/getMapPointsFilterByCity"](val);
+    },
+    serach_id(val) {
+      this.mapPoints = this.$store.getters["match/getHelpRequestById"](val);
+    },
+    serach_phone(val) {
+      this.mapPoints = this.$store.getters["match/getHelpRequestByPhone"](val);
+    },
+    serach_status(val) {
+      this.mapPoints = this.$store.getters["match/getMapPointsFilterByStatus"](val);
+    }
+  },
   computed: {
+    items() {
+      let resCitiesList = this.$store.getters["api/getCitiesList"];
+      return resCitiesList;
+    },
     FocusedMission: {
       get() {
         return this.$store.state.api.fousedMission;
@@ -126,9 +206,7 @@ export default {
         //  this.$store.commit("hamal/setFocusedMission", marker);
       },
     },
-    mapPoints() {
-      return this.$store.getters["match/getMapPoints"];
-    },
+
   },
 };
 </script>

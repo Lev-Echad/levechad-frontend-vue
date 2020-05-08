@@ -41,10 +41,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
     <div class="filter-section">
       <span>סנן לפי</span>
-
       <v-row>
         <v-col cols="3">
           <v-text-field
@@ -119,57 +117,67 @@
       </div>
     </div>
 
-    <v-simple-table class="table" height="80vh">
-      <thead>
-        <tr>
-          <th>תעודת זהות</th>
-          <th>שם פרטי</th>
-          <th>שם משפחה</th>
-          <th>טלפון</th>
-          <th>תאריך לידה</th>
-          <th>גיל</th>
-          <th>מין</th>
-          <th>עיר</th>
-          <th>כתובת</th>
-          <th>חמל</th>
-          <th>ארגון</th>
-          <th>התניידות</th>
-          <th>משימות בשבוע</th>
-          <th>משימות</th>
-          <th>אימייל</th>
-          <th>ציון</th>
-          <th>כמות פעמים</th>
-          <th>שפות</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          class="table-row"
-          v-for="item in getVolunteers"
-          :key="item.name"
-          @click="onVolunteerClick(item)"
-        >
-          <td>{{ item.tz_number }}</td>
-          <td>{{ item.first_name }}</td>
-          <td>{{ item.last_name }}</td>
-          <td>{{ item.phone_number }}</td>
-          <td>{{ item.date_of_birth }}</td>
-          <td>{{ item.age }}</td>
-          <td>{{ item.gender }}</td>
-          <td>{{ item.city.name }}</td>
-          <td>{{ item.address }}</td>
-          <td>{{ item.areas }}</td>
-          <td>{{ item.organization }}</td>
-          <td>{{ item.moving_way }}</td>
-          <td>{{ item.week_assignments_capacity }}</td>
-          <td>{{ (item.wanted_assignments).toString() }}</td>
-          <td>{{ item.email }}</td>
-          <td>{{ item.score }}</td>
-          <td>{{ item.times_volunteered }}</td>
-          <td>{{ (item.languages).toString() }}</td>
-        </tr>
-      </tbody>
-    </v-simple-table>
+    <v-data-table
+      :headers="headers"
+      :items="volunteers"
+      sort-by="tz_number"
+      class="table">
+      <template v-slot:top>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.first_name" label="שם פרטי"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.last_name" label="שם משפחה"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.phone_number" label="פלא"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.city.name" label="עיר"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.address" label="כתובת"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.email" label="מייל"></v-text-field>
+                  </v-col>
+                  <!-- <v-col cols="12" sm="6" md="4">
+                    <v-text-field v-model="editedItem.organization" label="ארגון"></v-text-field>
+                  </v-col> -->
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close">ביטול</v-btn>
+              <v-btn color="blue darken-1" text @click="save">שמור</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <v-icon
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
+        mdi-pencil
+      </v-icon>
+    </template>
+    <template v-slot:no-data>
+      <v-btn color="primary" @click="volunteers">Reset</v-btn>
+    </template>
+    </v-data-table>  
   </div>
 </template>
 
@@ -190,10 +198,55 @@ export default {
       this.$store.dispatch("hamalVolunteers/loadFirstPage");
     }
   },
-  data: () => ({
-    date: new Date().toISOString().substr(0, 10),
-    dateInput: false
-  }),
+   data: () => ({
+     dialog: false,
+      loading: true,
+      options: {},
+      dateInput: false,
+      headers: [
+        { text: 'עריכה', value: 'actions', sortable: false },
+        { text: "תעודת זהות'", value: "tz_number" },
+        { text: "שם פרטי", value: "first_name" },
+        { text: "שם משפחה", value: "last_name" },
+        { text: "טלפון", value: "phone_number" },
+        { text: "תאריך לידה", value: "date_of_birth" },
+        { text: "גיל", value: "age" },
+        { text: "מין", value: "gender" },
+        { text: "עיר", value: "city[name]" },
+        { text: "כתובת", value: "address" },
+        { text: "חמל", value: "areas" },
+        { text: 'ארגון', value: 'organization'},
+        { text: 'התניידות', value: 'moving_way'},
+        { text: 'משימות בשבוע', value: 'week_assignments_capacity'},
+        { text: 'משימות ', value: 'wanted_assignments'},
+        { text: 'אימייל', value: 'email'},
+        { text: 'ציון', value: 'score'},
+        { text: 'כמות פעמים', value: 'times_volunteered'},
+        { text: 'שפות', value: 'languages'},
+      ],
+      editedIndex: -1,
+      editedItem: {
+        tz_number: '',
+        first_name: 0,
+        last_name: 0,
+        phone_number: 0,
+        city: 0,
+        address: 0,
+        reason: 0,
+        created_date: 0,
+        actions:0
+      },
+      defaultItem: {
+        tz_number: '',
+        status: 0,
+        full_name: 0,
+        city: 0,
+        address: 0,
+        reason: 0,
+        created_date: 0,
+        actions:0
+      },
+    }),
   methods: {
     onFilterChange: _.debounce(function() {
       this.$store.dispatch("hamalVolunteers/loadFilteredVolunteers");
@@ -215,9 +268,41 @@ export default {
     },
     loadPreviousPage() {
       this.$store.dispatch("hamalVolunteers/loadPreviousPage");
-    }
+    },
+    editItem (item) {
+      this.editedIndex = this.volunteers.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
+    },
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    save () {
+      if (this.editedIndex > -1) {
+        Object.assign(this.volunteers[this.editedIndex], this.editedItem)
+        this.$store.dispatch("hamalVolunteers/updatevolunteer",this.editedItem)
+      }
+      this.close()
+    },
   },
+  watch: {
+    dialog (val) {
+        val || this.close()
+      },
+    },
   computed: {
+    volunteers(){
+        return this.$store.getters["hamalVolunteers/getVolunteers"];
+
+    },
+    formTitle () {
+        return 'ערוך מתנדב'
+    },
     ...mapGetters("hamalVolunteers", [
       "getVolunteers",
       "getAllVolunteersCount",
@@ -309,7 +394,7 @@ export default {
         this.$store.commit("hamalVolunteers/setIsSnackbarVisible", value);
       }
     }
-  }
+  },
 };
 </script>
 

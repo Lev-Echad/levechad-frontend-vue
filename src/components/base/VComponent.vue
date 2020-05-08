@@ -8,12 +8,10 @@
     <span
       class="font-weight-light secondary--text"
     >
-      הנתונים מעודכנים נכון לשעה: 
       <span
         class="secondary--text"
         style="text-decoration:none;"
       >
-        13/04/2020 19:32
       </span>
     </span>
   </section>

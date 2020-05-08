@@ -2,7 +2,7 @@
   <v-row dense>
     <v-col text-center cols="12">
       <v-card :color="getStatusColor(focusedMission.status)">
-        סטטוס: <strong>{{ focusedMission.status }}</strong>
+        סטטוס:  <strong>{{ focusedMission.status }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
