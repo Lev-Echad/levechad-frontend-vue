@@ -10,7 +10,7 @@ const state = {
   filters:{
     status:[],
     page: 1,
-    pageSize: 4,
+    pageSize: 30,
     id: '',
     areas:[],
     phone_number:''

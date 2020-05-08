@@ -32,6 +32,7 @@
         prepend-icon="mdi-city"
         no-data-text=""
         cache-items
+        clearable
       ></v-autocomplete>
     </v-col>
     <v-col cols="12" sm="3">
@@ -177,17 +178,35 @@ export default {
         if (val.length > 1) {
           this.$store.dispatch("api/reqCitiesAutoComplete", val);
         }
-      }
-      this.mapPoints = this.$store.getters["match/getMapPointsFilterByCity"](val);
+        if(val.length == 0){
+          this.refresh()
+        } else{
+          this.mapPoints = this.$store.getters["match/getMapPointsFilterByCity"](val);
+        }
+      }else{
+          this.refresh()
+        }
     },
     serach_id(val) {
-      this.mapPoints = this.$store.getters["match/getHelpRequestById"](val);
+      if(val.length == 0){
+        this.refresh()
+      }else{
+        this.mapPoints = this.$store.getters["match/getHelpRequestById"](val);
+      }
     },
     serach_phone(val) {
-      this.mapPoints = this.$store.getters["match/getHelpRequestByPhone"](val);
+      if(val.length == 0){
+        this.refresh()
+      }else{
+        this.mapPoints = this.$store.getters["match/getHelpRequestByPhone"](val);
+      }
     },
     serach_status(val) {
-      this.mapPoints = this.$store.getters["match/getMapPointsFilterByStatus"](val);
+      if(val){
+        this.mapPoints = this.$store.getters["match/getMapPointsFilterByStatus"](val);
+      }else{
+        this.refresh()
+      }
     }
   },
   computed: {

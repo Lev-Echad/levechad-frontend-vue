@@ -13,6 +13,24 @@
           inset
           vertical
         ></v-divider>
+            <v-row>
+      <div class="pl-6"></div>
+      <v-chip class="pl-3 m-12">
+      <download-excel
+        :data="helpRequests"
+        name = "משימות.xls"
+        :fields ="excel_fields"
+      >
+        יצא לאקסל
+      <v-icon
+          small
+          class="mr-2"
+        >
+          mdi-download
+        </v-icon>
+      </download-excel>
+      </v-chip>
+    </v-row>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <v-card>
@@ -67,7 +85,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
+      <!-- <v-btn color="primary" @click="initialize">Reset</v-btn> -->
     </template>
   </v-data-table>
 </template>
@@ -78,6 +96,7 @@
       totalDesserts: 0,
       loading: true,
       options: {},
+      dialog:null,
       headers: [
         { text: "מס'", value: "id" },
         { text: "סטטוס", value: "status" },
@@ -92,6 +111,19 @@
         { text: 'פעולה', value: 'actions', sortable: false },
 
       ],
+      excel_fields:{
+          "מס'"  :"id" ,
+          "סטטוס"  :"status" ,
+          "שם מלא"  :"full_name" ,
+          "טלפון"  :"phone_number" ,
+          "עיר"  :"city.name" ,
+          "סוג עזרה"  :"type" ,
+          "איזור"  :"area" ,
+          "כתובת"  :"address" ,
+          "סיבה"  :"reason" ,
+          "תאריך"  :"created_date" ,
+          'פעולה'  :'actions'
+      },
       editedIndex: -1,
       editedItem: {
         id: '',
@@ -141,9 +173,9 @@
       },
     },
 
-    created () {
-      this.initialize()
-    },
+    // created () {
+    //   this.initialize()
+    // },
 
     methods: {
       editItem (item) {
