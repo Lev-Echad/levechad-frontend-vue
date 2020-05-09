@@ -299,6 +299,17 @@ export default {
         created_date: 0,
         actions:0
       },
+      defaultItem: {
+        tz_number: '',
+        first_name: 0,
+        last_name: 0,
+        phone_number: 0,
+        city: 0,
+        address: 0,
+        reason: 0,
+        created_date: 0,
+        actions:0
+      },
     }),
   methods: {
     reset(){
@@ -308,7 +319,6 @@ export default {
       this.$store.dispatch("hamalVolunteers/loadFilteredVolunteers");
     }, 100),
     onVolunteerClick(volunteer) {
-      console.log(volunteer)
       this.$store.dispatch("hamalVolunteers/openNewDialog", volunteer);
     },
     closeDialog() {

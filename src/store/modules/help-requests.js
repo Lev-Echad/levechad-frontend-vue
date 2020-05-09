@@ -120,8 +120,8 @@ const actions = {
       console.log(helpRequests);
         const data = {
             "status":helpRequests.status,
-            "id": helpRequests.id,
-            "city": helpRequests.city.name,
+            "helping_volunteer": helpRequests.helping_volunteer.id,
+            "type_text": helpRequests.type_text,
             "notes": helpRequests.notes,
         };
         const response = await axios.patch(`${rootState.baseAPIurl}/api/updatehelprequest/${helpRequests.id}/`, data,
@@ -140,7 +140,7 @@ const actions = {
         //commit('setIsSnackbarVisible', true);
         //commit('setDialogIsVisible', false);
     }
-},
+  },
 };
 
 export default {
