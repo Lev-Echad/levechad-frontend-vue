@@ -75,6 +75,23 @@ const mutations = {
     };
   },
   focusedMissionHamalFields(state, payload) {
+    switch(payload.status){
+      case "התקבלה":
+        payload.status = "WAITING"
+        break;
+      case "בטיפול":
+        payload.status = "IN_CARE"
+        break;
+      case "הועבר למתנדב":
+        payload.status = "TO_VOLUNTER"
+        break;
+      case "סיום טיפול":
+        payload.status = "DONE"
+        break;
+      case "לא רלוונטי":
+        payload.status = "NOT_DONE"
+        break;
+    }
     state.HamalHelpRequestFields = {
       status: payload.status,
       helping_volunteer: payload.helping_volunteer.id,
