@@ -158,7 +158,14 @@ const actions = {
         context.commit("focusedMissionDetails", response.data.results[0]);
         context.commit("isLoading", false);
         context.commit("focusedMissionId", helprequest_id);
-        context.commit('focusedMissionHamalFields', response.data.results[0])
+        let payload = response.data.results[0]
+        if(!payload.helping_volunteer){
+          payload.helping_volunteer = {
+            id:null,
+            full_name:null
+          }
+        }
+        context.commit('focusedMissionHamalFields', payload)
         context.dispatch("reqBestMatch", helprequest_id);
       //  this.reqBestMatch()
       })
@@ -192,7 +199,14 @@ const actions = {
       )
       .then((response) => {
          context.commit('focusedMissionDetails', response.data)
-         context.commit('focusedMissionHamalFields', response.data)
+         let payload = response.data
+         if(!payload.helping_volunteer){
+           payload.helping_volunteer = {
+             id:null,
+             full_name:null
+           }
+         }
+         context.commit('focusedMissionHamalFields', payload)
          context.commit("isLoading", false)
         console.log(response);
       })
