@@ -18,29 +18,29 @@
     </v-col>
     <v-col cols="12">
       <v-card class="primary lighten-2  text-center white--text">
-        <strong v-if="focusedMission.city">{{
+        <strong v-if="focusedMission.city">עיר: {{
           focusedMission.city.name
         }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
       <v-card class="primary lighten-2  text-center white--text">
-        <strong>{{ focusedMission.type }}</strong>
+        <strong>סוג: {{ focusedMission.type }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
       <v-card class="primary lighten-2  text-center white--text">
-        <strong>{{ focusedMission.phone_number }}</strong>
+        <strong>פלא: {{ focusedMission.phone_number }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
       <v-card class="primary lighten-2  text-center white--text">
-        <strong>{{ focusedMission.address }}</strong>
+        <strong>כתובת: {{ focusedMission.address }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
       <v-card class="primary lighten-2  text-center white--text">
-        <strong>{{ focusedMission.type_text }}</strong>
+        <strong>בקשה: {{ focusedMission.type_text }}</strong>
       </v-card>
     </v-col>
     <v-col v-if="focusedMission.helping_volunteer" cols="12">
@@ -75,6 +75,12 @@
           hint="חמליסט מטפל ודברים שקשורים לפניה"
         >
         </v-textarea>
+                <v-text-field
+        solo
+        v-model="HamalHelpRequestFields.status_updater"
+        label="חמליסט מטפל"
+        >
+        </v-text-field>
       </v-col>
       <v-col cols="12">
         <v-btn  raised class="success" @click="saveChanges()">
