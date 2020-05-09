@@ -10,11 +10,9 @@ const state = {
   isLoading: false,
   HamalHelpRequestFields:{
     status:'',
-    id:'',
-    phone_number:'',
-    city:'',
+    helping_volunteer:'',
+    type_text:'',
     notes:'',
-    
   },
 };
 const getters = {

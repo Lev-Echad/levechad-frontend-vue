@@ -43,6 +43,11 @@
         <strong>{{ focusedMission.type_text }}</strong>
       </v-card>
     </v-col>
+    <v-col v-if="focusedMission.helping_volunteer" cols="12">
+      <v-card class="primary lighten-2  text-center white--text">
+        <strong> מס׳ מתנדב: {{ focusedMission.helping_volunteer.id }}</strong>
+      </v-card>
+    </v-col>
     <v-divider> </v-divider>
     <v-row>
       <v-col cols="12">
@@ -59,7 +64,7 @@
           hint="יש לעדכן סטטוס להועבר למתנדב"
           :persistent-hint="(HamalHelpRequestFields.status!='TO_VOLUNTER')"
           :disabled="HamalHelpRequestFields.status!='TO_VOLUNTER'"
-          v-model="HamalHelpRequestFields.volunteer_id"
+          v-model="HamalHelpRequestFields.helping_volunteer"
         >
         </v-text-field>
         <v-textarea
