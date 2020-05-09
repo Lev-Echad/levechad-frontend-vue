@@ -72,11 +72,11 @@
           v-model="HamalHelpRequestFields.notes"
           class="py-2"
           outlined=""
-          hint="חמליסט מטפל ודברים שקשורים לפניה"
+          hint="דברים שקשורים לפניה"
         >
         </v-textarea>
-                <v-text-field
-        solo
+        <v-text-field
+        outlined=""
         v-model="HamalHelpRequestFields.status_updater"
         label="חמליסט מטפל"
         >
