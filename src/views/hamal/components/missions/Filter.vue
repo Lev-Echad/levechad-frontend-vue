@@ -14,6 +14,16 @@
       ]"> 
     </v-select>
     <v-text-field  clearable label="טלפון" v-model="filters.phone_number"> </v-text-field >
+    <v-autocomplete
+        v-model="filters.city"
+        :items="items"
+        :search-input.sync="search_city"
+        hide-no-data
+        label="עיר"
+        no-data-text=""
+        cache-items
+        clearable
+      ></v-autocomplete>
     <v-btn @click="search()">חפש</v-btn>
     תוצאות: 
     {{totalHelpRequests}}
@@ -22,12 +32,19 @@
 
 <script>
 export default {
+  data: ()=>({
+    search_city:null,
+  }),
   computed: {
+    items() {
+      let resCitiesList = this.$store.getters["api/getCitiesList"];
+      return resCitiesList;
+    },
     filters() {
       return this.$store.getters["helpRequests/filters"];
     },
-    areas() {
-      return this.$store.getters["helpRequests/areas"];
+    city() {
+      return this.$store.getters["helpRequests/city"];
     },
     totalHelpRequests() {
       return this.$store.getters["helpRequests/totalHelpRequests"];
@@ -49,5 +66,14 @@ export default {
       this.$store.dispatch("helpRequests/reqHelpRequests");
     },
   },
+  watch: {
+    search_city(val) {
+      if (val) {
+        if (val.length > 1) {
+          this.$store.dispatch("api/reqCitiesAutoComplete", val);
+        }
+      }
+    },
+  }
 };
 </script>
