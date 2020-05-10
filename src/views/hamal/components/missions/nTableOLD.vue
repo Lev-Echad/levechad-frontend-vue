@@ -59,7 +59,6 @@ export default {
   //   },
   // },
   mounted() {
-    this.$store.dispatch("helpRequests/reqAreas");
     this.$store.dispatch("helpRequests/reqHelpRequests");
   },
 };

@@ -12,10 +12,9 @@ const state = {
     page: 1,
     pageSize: 30,
     id: '',
-    areas:[],
+    city:'',
     phone_number:''
   },
-  areas:''
 };
 const getters = {
   helpRequests(state) {
@@ -30,8 +29,8 @@ const getters = {
   filters(state){
     return state.filters
   },
-  areas(state){
-    return state.areas
+  city(state){
+    return state.city
   },
   phone_number(state){
     return state.phone_number
@@ -49,8 +48,8 @@ const mutations = {
   isLoading(state, payload){
     state.isLoading = payload
   },
-  areas(state, payload){
-    state.areas = payload
+  city(state, payload){
+    state.city = payload
   },
 
 };
@@ -76,7 +75,7 @@ const actions = {
   },
   reqHelpRequests(context) {
     context.commit("isLoading", true)
-    var {status, page, pageSize, id, areas,phone_number} = context.state.filters
+    var {status, page, pageSize, id, city,phone_number} = context.state.filters
     if(typeof(status) == 'undefined' || status == null) {
       status =''
     }
@@ -89,6 +88,9 @@ const actions = {
     if(typeof(phone_number) == 'undefined' || phone_number == null) {
       phone_number =''
     } 
+    if(typeof(city) == 'undefined' || city == null) {
+      city =''
+    } 
 
     axios
       .get(context.rootState.baseAPIurl + "/api/helprequests/?"
@@ -97,7 +99,7 @@ const actions = {
       +"&page="+page
       +"&pageSize="+pageSize
       +"&phone_number="+phone_number
-      +"&city__region__in="+areas
+      +"&city="+city
       
       , {
         headers: {
