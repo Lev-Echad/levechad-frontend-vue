@@ -25,7 +25,7 @@ const state = {
         isLoading: false,
         volunteer: {},
         expiration_date: '',
-    }
+    },
 };
 
 const getters = {
@@ -79,7 +79,8 @@ const getters = {
     },
     getIsSnackbarVisible: (state) => {
         return state.isSnackbarVisible;
-    }
+    },
+
 };
 
 const mutations = {
@@ -123,26 +124,48 @@ const mutations = {
     setIsSnackbarVisible(state, value) {
         state.isSnackbarVisible = value;
     },
+
 };
 
 const actions = {
-    async loadFirstPage({ commit, rootState }) {
-        commit('setIsLoading', true);
+
+
+    async reqVolunteerDetailsById(context, volunteer_id) {
+        console.log(volunteer_id)
         try {
-            const volunteers = await axios.get(`${rootState.baseAPIurl}/api/volunteers`,
+            let volunteer = await axios.get(context.rootState.baseAPIurl+"/api/volunteers/?id="+volunteer_id,
                 {
                     headers: {
-                        Authorization: "Token " + rootState.hamalAuth.accessToken,
+                        Authorization: "Token " + context.rootState.hamalAuth.accessToken,
                     },
                 })
+            return volunteer
+        }
+        catch (e) {
+            console.log(e)
+            return e
+        }
+
+    },
+
+
+    loadFirstPage({commit, rootState}) {
+        commit('setIsLoading', true);
+        axios.get(`${rootState.baseAPIurl}/api/volunteers`,
+            {
+                headers: {
+                    Authorization: "Token " + rootState.hamalAuth.accessToken,
+                },
+            }).then(volunteers => {
             commit('setVolunteers', volunteers.data);
             commit('setCurrentPage', 1);
-        } catch (err) {
-            console.log(err);
-        }
-        commit('setIsLoading', false);
+            commit('setIsLoading', false);
+        }).catch(err=>{
+            console.log(err)
+            commit('setIsLoading', false);
+        })
     },
-    async loadFilteredVolunteers({ commit, dispatch, rootState, state }) {
+    async loadFilteredVolunteers({commit, dispatch, rootState, state}) {
         commit('setIsLoading', true);
         if (!state.filter.phone_number && !state.filter.tz_number && !state.filter.city_filter && !state.filter.areas && !state.filter.organization) {
             dispatch('loadFirstPage');
@@ -169,7 +192,7 @@ const actions = {
         }
         commit('setIsLoading', false);
     },
-    async loadNextPage({ commit, rootState, state }) {
+    async loadNextPage({commit, rootState, state}) {
         const nextPage = state.volunteers.next;
         const i = nextPage.indexOf('page=');
         const pageNum = nextPage.substring(i + 5);
@@ -188,7 +211,7 @@ const actions = {
             console.log(err);
         }
     },
-    async loadPreviousPage({ commit, rootState, state }) {
+    async loadPreviousPage({commit, rootState, state}) {
         const previousPage = state.volunteers.previous;
         const i = previousPage.indexOf('page=');
         const pageNum = previousPage.substring(i + 5);
@@ -211,7 +234,7 @@ const actions = {
             console.log(err);
         }
     },
-    async setVolunteerFreeze({ commit, rootState, state }) {
+    async setVolunteerFreeze({commit, rootState, state}) {
         try {
             const data = {
                 "volunteer": state.dialog.volunteer.id,
@@ -233,13 +256,13 @@ const actions = {
             commit('setDialogIsVisible', false);
         }
     },
-    async updatevolunteer({ commit, rootState, state },volunteer) {
+    async updatevolunteer({commit, rootState, state}, volunteer) {
         try {
             //console.log(volunteer.id);
             //console.log(volunteer);
             let v = volunteer;
             const data = {
-                "tz_number":v.tz_number,
+                "tz_number": v.tz_number,
                 "first_name": v.first_name,
                 "last_name": v.last_name,
                 "city": v.city.name,
@@ -264,7 +287,7 @@ const actions = {
             commit('setDialogIsVisible', false);
         }
     },
-    openNewDialog({ commit }, volunteer) {
+    openNewDialog({commit}, volunteer) {
         commit('setDialogIsVisible', true);
         commit('setDialogVolunteer', volunteer);
         commit('setDialogExpirationDate', '');

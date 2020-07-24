@@ -57,7 +57,7 @@
         <v-col cols="3">
           <v-text-field
             v-model="phone_number"
-            label="טלפון"
+            label="נייד"
             outlined
             append-icon="mdi-phone"
             @keyup="onFilterChange()"

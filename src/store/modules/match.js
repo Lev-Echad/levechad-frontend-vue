@@ -111,6 +111,15 @@ const mutations = {
   isLoading(state, payload) {
     state.isLoading = payload;
   },
+  updateMapMarkerStatus(state, payload){
+    let mission_id = payload.id;
+    let new_status = payload.status;
+    state.mapPoints.forEach(point => {
+      if (point.id === mission_id) {
+        point.status = new_status
+      }
+    });
+  },
 };
 const actions = {
   // get all help request 
@@ -156,41 +165,45 @@ const actions = {
         });
     }
   },
-
   // called from pressing map marker
   reqFocusedMissionDetails(context, helprequest_id) {
     context.commit("isLoading", true);
     axios
-      .get(
+    .get(
         context.rootState.baseAPIurl +
-          "/api/helprequests/?id=" +
-          helprequest_id,
+        "/api/helprequests/?id=" +
+        helprequest_id,
         {
           headers: {
             Authorization: "Token " + context.rootState.hamalAuth.accessToken,
           },
         }
-      )
-      .then((response) => {
-        context.commit("focusedMissionDetails", response.data.results[0]);
-        context.commit("isLoading", false);
-        context.commit("focusedMissionId", helprequest_id);
-        let payload = response.data.results[0]
-        if(!payload.helping_volunteer){
-          payload.helping_volunteer = {
-            id:null,
-            full_name:null
-          }
+    )
+    .then((response) => {
+      context.commit("focusedMissionDetails", response.data.results[0]);
+      context.commit("isLoading", false);
+      context.commit("focusedMissionId", helprequest_id);
+      let payload = response.data.results[0]
+      if(!payload.helping_volunteer){
+        payload.helping_volunteer = {
+          id:null,
+          full_name:null
         }
-        context.commit('focusedMissionHamalFields', payload)
-        context.dispatch("reqBestMatch", helprequest_id);
+      }
+      context.commit('updateMapMarkerStatus', payload) //update map marker (needed after changing something in mission ops)
+      context.commit('focusedMissionHamalFields', payload)
+      context.dispatch("reqBestMatch", helprequest_id);
+
+
       //  this.reqBestMatch()
-      })
-      .catch((err) => {
-        context.commit("isLoading", false);
-        console.log(err);
-      });
-  },
+    })
+    .catch((err) => {
+      context.commit("isLoading", false);
+      console.log(err);
+    });
+
+    },
+
   // update
   updateHelpRequest(context) {
     // let helprequest_id = (payload.helprequest_id!='' ||payload.helprequest_id=="undefined" ) ? context.state.focusedMissionId : payload.helprequest_id
@@ -215,17 +228,8 @@ const actions = {
         }
       )
       .then((response) => {
-         context.commit('focusedMissionDetails', response.data)
-         let payload = response.data
-         if(!payload.helping_volunteer){
-           payload.helping_volunteer = {
-             id:null,
-             full_name:null
-           }
-         }
-         context.commit('focusedMissionHamalFields', payload)
-         context.commit("isLoading", false)
-        console.log(response);
+         context.dispatch('reqFocusedMissionDetails', helprequest_id  )
+
       })
       .catch((err) => {
         context.commit("isLoading", false);

@@ -1,11 +1,12 @@
 <template>
   <v-row dense>
-    <v-col text-center cols="12">
-      <v-card :color="getStatusColor(focusedMission.status)">
-        סטטוס:  <strong>{{ focusedMission.status }}</strong>
+    <v-col  text-center cols="12">
+      <v-card class="text-center white--text" :color="getStatusColor(focusedMission.status)">
+        <strong>{{ focusedMission.status }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
+
       <v-card class="primary lighten-2 text-center white--text">
         <strong>{{ focusedMission.full_name }}</strong>
       </v-card>
@@ -30,22 +31,25 @@
     </v-col>
     <v-col cols="12">
       <v-card class="primary lighten-2  text-center white--text">
-        <strong>פלא: {{ focusedMission.phone_number }}</strong>
+        {{ focusedMission.phone_number }}
       </v-card>
     </v-col>
     <v-col cols="12">
       <v-card class="primary lighten-2  text-center white--text">
-        <strong>כתובת: {{ focusedMission.address }}</strong>
+        <p  class="ma-0 pa-0">כתובת: {{ focusedMission.address }}</p>
       </v-card>
     </v-col>
     <v-col cols="12">
       <v-card class="primary lighten-2  text-center white--text">
-        <strong>בקשה: {{ focusedMission.type_text }}</strong>
+          <p class="ma-0 pa-0">פירוט בקשה</p>
+          {{ focusedMission.type_text }}
       </v-card>
     </v-col>
     <v-col v-if="focusedMission.helping_volunteer" cols="12">
-      <v-card class="primary lighten-2  text-center white--text">
-        <strong> מס׳ מתנדב: {{ focusedMission.helping_volunteer.id }}</strong>
+
+      <v-card class="info lighten-2  text-center white--text">
+          <p  class="ma-0 pa-0"> מס׳ מתנדב: {{ focusedMission.helping_volunteer.id }}</p>
+          <p  class="ma-0 pa-0" v-text="focusedMission.helping_volunteer.full_name"></p>
       </v-card>
     </v-col>
     <v-divider> </v-divider>
@@ -53,17 +57,17 @@
       <v-col cols="12">
         <v-radio-group v-model="HamalHelpRequestFields.status">
           <v-radio label="התקבלה" value="WAITING"></v-radio>
-          <v-radio label="בטיפול חמל" value="IN_CARE"></v-radio>
-          <v-radio label="הועבר למתנדב" value="TO_VOLUNTER"></v-radio>
-          <v-radio label="סיום טיפול" value="DONE"></v-radio>
-          <v-radio label="לא רלוונטי" value="NOT_DONE"></v-radio>
+          <v-radio color="orange" label="בטיפול חמל" value="IN_CARE"></v-radio>
+          <v-radio color="green" label="הועבר למתנדב" value="TO_VOLUNTER"></v-radio>
+          <v-radio color="info" label="סיום טיפול" value="DONE"></v-radio>
+          <v-radio color="info" label="לא רלוונטי" value="NOT_DONE"></v-radio>
         </v-radio-group>
         <v-text-field
           label="מס' מתנדב"
-          solo
+          outlined=""
           hint="יש לעדכן סטטוס להועבר למתנדב"
           :persistent-hint="(HamalHelpRequestFields.status!='TO_VOLUNTER')"
-          :disabled="HamalHelpRequestFields.status!='TO_VOLUNTER'"
+          v-show="HamalHelpRequestFields.status=='TO_VOLUNTER'"
           v-model="HamalHelpRequestFields.helping_volunteer"
         >
         </v-text-field>
@@ -83,7 +87,11 @@
         </v-text-field>
       </v-col>
       <v-col cols="12">
-        <v-btn  raised class="success" @click="saveChanges()">
+          <p v-show="!HamalHelpRequestFields.helping_volunteer && (HamalHelpRequestFields.status=='TO_VOLUNTER')" class="primary--text">יש לעדכן מספר מתנדב לפני שמירה!</p>
+        <v-btn
+
+                :disabled="!HamalHelpRequestFields.helping_volunteer && (HamalHelpRequestFields.status=='TO_VOLUNTER')"
+                raised class="success" @click="saveChanges()">
           שמירה
         </v-btn>
       </v-col>
@@ -96,21 +104,32 @@
 <script>
 
 export default {
+
   computed: {
     focusedMission: {
       get() {
         return this.$store.getters["match/focusedMissionDetails"];
       },
     },
+      helpingVolunteerDetails(){
+       return this.focusedMission.helping_volunteer
+      },
     isLoading() {
       return this.$store.getters["match/isLoading"];
     },
     HamalHelpRequestFields() {
       return this.$store.getters["match/HamalHelpRequestFields"];
     },
+
   },
-  mounted() {},
+
+  mounted(){
+    // if(this.focusedMission.helping_volunteer){
+    //     this.$store.dispatch("hamalVolunteers/reqVolunteerDetailsById", this.focusedMission.helping_volunteer.id)
+    // }
+  },
   methods: {
+
     saveChanges() {
       this.$store.dispatch("match/updateHelpRequest");
     },
@@ -127,7 +146,7 @@ export default {
           color = "green";
           break;
         case "טופל":
-          color = "green";
+          color = "info";
           break;
         case "לא טופל":
           color = "red";
