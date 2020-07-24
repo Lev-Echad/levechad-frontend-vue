@@ -80,9 +80,7 @@ const getters = {
     getIsSnackbarVisible: (state) => {
         return state.isSnackbarVisible;
     },
-    getFocusedVolunteerDetails: (state)=>{ //del?
-        return state.focusedVolunteer
-}
+
 };
 
 const mutations = {
@@ -126,32 +124,11 @@ const mutations = {
     setIsSnackbarVisible(state, value) {
         state.isSnackbarVisible = value;
     },
-    setFocusedVolunteerDetails(state, payload) { //del?
-        state.focusedVolunteer = {
-            ...state.focusedVolunteer,
-            ...payload,
-        };
-    }
+
 };
 
 const actions = {
-    // async loadFirstPage({ commit, rootState }) {
-    //     commit('setIsLoading', true);
-    //     try {
-    //         const volunteers = await axios.get(`${rootState.baseAPIurl}/api/volunteers`,
-    //             {
-    //                 headers: {
-    //                     Authorization: "Token " + rootState.hamalAuth.accessToken,
-    //                 },
-    //             })
-    //         commit('setVolunteers', volunteers.data);
-    //         commit('setCurrentPage', 1);
-    //         commit('setIsLoading', false);
-    //     } catch (err) {
-    //         commit('setIsLoading', false);
-    //         console.log(err);
-    //     }
-    //
+
 
     async reqVolunteerDetailsById(context, volunteer_id) {
         console.log(volunteer_id)
@@ -171,23 +148,7 @@ const actions = {
 
     },
 
-    //  reqVolunteerDetailsById(context, volunteer_id) {
-    //      context.commit('setIsLoading', true);
-    //     console.log(volunteer_id)
-    //      axios.get(context.rootState.baseAPIurl+"/api/volunteers/?id="+volunteer_id,
-    //         {
-    //             headers: {
-    //                 Authorization: "Token " + context.rootState.hamalAuth.accessToken,
-    //             },
-    //         }).then((volunteer) => {
-    //             console.log(volunteer)
-    //          context.commit("setFocusedVolunteerDetails", volunteer.data.results[0]);
-    //          context.commit('setIsLoading', false);
-    //     }).catch((err)=>{
-    //         console.log(err)
-    //          context.commit('setIsLoading', false);
-    //     })
-    // },
+
     loadFirstPage({commit, rootState}) {
         commit('setIsLoading', true);
         axios.get(`${rootState.baseAPIurl}/api/volunteers`,

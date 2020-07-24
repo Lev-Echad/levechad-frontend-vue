@@ -203,57 +203,7 @@ const actions = {
     });
 
     },
-/*  // called from pressing map marker
-  reqFocusedMissionDetails(context, helprequest_id) {
-    context.commit("isLoading", true);
-    axios
-      .get(
-        context.rootState.baseAPIurl +
-          "/api/helprequests/?id=" +
-          helprequest_id,
-        {
-          headers: {
-            Authorization: "Token " + context.rootState.hamalAuth.accessToken,
-          },
-        }
-      )
-      .then((response) => {
-        context.commit("focusedMissionDetails", response.data.results[0]);
-        context.commit("isLoading", false);
-        context.commit("focusedMissionId", helprequest_id);
-        let payload = response.data.results[0]
-        if(!payload.helping_volunteer){
-          payload.helping_volunteer = {
-            id:null,
-            full_name:null
-          }
 
-          context.commit('focusedMissionHamalFields', payload)
-        }
-        else{
-          let volunteer = context.dispatch('hamalVolunteers/reqVolunteerDetailsById',
-              payload.helping_volunteer.id
-              , {root:true})
-          volunteer.then((res)=>{
-            payload.helping_volunteer = {
-              ...payload.helping_volunteer,
-              ...res.data.results[0],
-
-            };
-            context.commit('focusedMissionHamalFields', payload)
-          })
-
-        }
-        context.dispatch("reqBestMatch", helprequest_id);
-
-
-      //  this.reqBestMatch()
-      })
-      .catch((err) => {
-        context.commit("isLoading", false);
-        console.log(err);
-      });
-  },*/
   // update
   updateHelpRequest(context) {
     // let helprequest_id = (payload.helprequest_id!='' ||payload.helprequest_id=="undefined" ) ? context.state.focusedMissionId : payload.helprequest_id
