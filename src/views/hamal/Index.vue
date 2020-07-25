@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <HamalBar  v-if="isLoggedIn" />
-    <HamalDrawer  v-if="isLoggedIn" />
+<!--    <HamalDrawer  v-if="isLoggedIn" />-->
     <HamalView  v-if="isLoggedIn" />
   </v-app>
 </template>
@@ -13,7 +13,7 @@ export default {
   components: {
    HamalBar: () => import("./components/core/HamalBar"),
    HamalView: () => import("./components/core/HamalView"),
-   HamalDrawer: () => import("./components/core/HamalDrawer"),
+   // HamalDrawer: () => import("./components/core/HamalDrawer"),
 
   },
   computed: {

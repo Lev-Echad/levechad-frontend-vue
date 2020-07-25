@@ -1,3 +1,4 @@
+<!--this file is not in use, we changed navigation to app bar-->
 <template>
   <v-navigation-drawer v-model="drawer" class="red" dark app right>
     <v-list>
