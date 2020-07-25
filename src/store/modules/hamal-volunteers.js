@@ -18,7 +18,8 @@ const state = {
         tz_number: '',
         city_filter: '',
         areas: '',
-        organization: ''
+        organization: '',
+        id: ''
     },
     dialog: {
         isVisible: false,
@@ -56,6 +57,9 @@ const getters = {
     getFilterOrganization: (state) => {
         return state.filter.organization;
     },
+    getFilterId: (state) => {
+        return state.filter.Id;
+    },
     getCurrentPage: (state) => {
         return state.currentPage;
     },
@@ -85,8 +89,14 @@ const getters = {
 
 const mutations = {
     setVolunteers(state, volunteers) {
-        // console.log(volunteers);
-        state.volunteers = volunteers;
+         console.log(volunteers);
+     //   state.volunteers.length = 0; // Clear contents
+     //   state.volunteers.push.apply(state.volunteers, volunteers); // Append new contents
+      //  state.volunteers = volunteers;
+        state.volunteers = {
+            ...state.volunteers,
+            ...volunteers,
+        };
     },
     setIsLoading(state, isLoading) {
         state.isLoading = isLoading;
@@ -105,6 +115,9 @@ const mutations = {
     },
     setFilterOrganization(state, value) {
         state.filter.organization = value;
+    },
+    setFilterId(state, value) {
+        state.filter.id = value;
     },
     setCurrentPage(state, value) {
         state.currentPage = value;
@@ -148,26 +161,40 @@ const actions = {
 
     },
 
+    async reqLoadFirstPage({rootState}){
+        try {
+            let volunteers = await axios.get(`${rootState.baseAPIurl}/api/volunteers/`,
+                {
+                    headers: {
+                        Authorization: "Token " + rootState.hamalAuth.accessToken,
+                    },
+                })
+            return volunteers
 
-    loadFirstPage({commit, rootState}) {
-        commit('setIsLoading', true);
-        axios.get(`${rootState.baseAPIurl}/api/volunteers`,
-            {
-                headers: {
-                    Authorization: "Token " + rootState.hamalAuth.accessToken,
-                },
-            }).then(volunteers => {
-            commit('setVolunteers', volunteers.data);
-            commit('setCurrentPage', 1);
-            commit('setIsLoading', false);
-        }).catch(err=>{
+        } catch(err){
             console.log(err)
+        }
+    },
+    async loadFirstPage({commit,dispatch, rootState}) {
+        commit('setIsLoading', true);
+        try {
+
+            dispatch('reqLoadFirstPage').then((volunteers)=>{
+                commit('setVolunteers', volunteers.data);
+                commit('setCurrentPage', 1);
+                commit('setIsLoading', false);
+            })
+
+
+        } catch(err){
             commit('setIsLoading', false);
-        })
+            console.log(err)
+        }
+
     },
     async loadFilteredVolunteers({commit, dispatch, rootState, state}) {
         commit('setIsLoading', true);
-        if (!state.filter.phone_number && !state.filter.tz_number && !state.filter.city_filter && !state.filter.areas && !state.filter.organization) {
+        if (!state.filter.phone_number && !state.filter.tz_number && !state.filter.city_filter && !state.filter.areas && !state.filter.organization && !state.filter.id) {
             dispatch('loadFirstPage');
             commit('setIsLoading', false);
             return;
@@ -180,7 +207,8 @@ const actions = {
                         tz_number: state.filter.tz_number,
                         city: state.filter.city_filter,
                         areas: state.filter.areas,
-                        organization: state.filter.organization
+                        organization: state.filter.organization,
+                        id: state.filter.id,
                     },
                     headers: {
                         Authorization: "Token " + rootState.hamalAuth.accessToken,

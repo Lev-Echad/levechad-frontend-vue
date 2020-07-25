@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import hamal from "./modules/hamal";
-import volunteerSignup from "./modules/volunteer-signup";
 import hamalAuth from "./modules/hamal-auth";
 import match from "./modules/match";
 import helpRequests from "./modules/help-requests";
@@ -70,7 +69,6 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     hamal,
-    volunteerSignup,
     api,
     hamalAuth,
     match,
