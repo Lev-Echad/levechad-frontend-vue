@@ -44,17 +44,27 @@
     <div class="filter-section">
       <span>סנן לפי</span>
       <v-row>
-        <v-col cols="3">
+        <v-col cols="2">
           <v-text-field
-            v-model="tz_number"
-            label="תעודת זהות"
+            v-model="id"
+            label="מס' מתנדב"
             outlined
             append-icon="mdi-account-details"
             @keyup="onFilterChange()"
             @change="onFilterChange()"
           ></v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="2">
+          <v-text-field
+            v-model="tz_number"
+            label="תעודת זהות"
+            outlined
+            append-icon="mdi-numeric-9-box-multiple-outline"
+            @keyup="onFilterChange()"
+            @change="onFilterChange()"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
           <v-text-field
             v-model="phone_number"
             label="נייד"
@@ -251,6 +261,7 @@ export default {
       headers: [
         { text: 'עריכה', value: 'actions', sortable: false },
         { text: 'הקפאה', value: 'freeze', sortable: false },
+        { text: "מס' מתנדב'", value: "id" },
         { text: "תעודת זהות'", value: "tz_number" },
         { text: "שם פרטי", value: "first_name" },
         { text: "שם משפחה", value: "last_name" },
@@ -398,6 +409,7 @@ export default {
       "getFilterCity",
       "getFilterAreas",
       "getFilterOrganization",
+      "getFilterId",
       "getCurrentPage",
       "getNextPage",
       "getPreviousPage",
@@ -445,6 +457,14 @@ export default {
       },
       set(value) {
         this.$store.commit("hamalVolunteers/setFilterOrganization", value);
+      }
+    },
+    id: {
+      get() {
+        return this.getFilterId;
+      },
+      set(value) {
+        this.$store.commit("hamalVolunteers/setFilterId", value);
       }
     },
     dialogIsVisible: {

@@ -18,7 +18,8 @@ const state = {
         tz_number: '',
         city_filter: '',
         areas: '',
-        organization: ''
+        organization: '',
+        id: ''
     },
     dialog: {
         isVisible: false,
@@ -55,6 +56,9 @@ const getters = {
     },
     getFilterOrganization: (state) => {
         return state.filter.organization;
+    },
+    getFilterId: (state) => {
+        return state.filter.Id;
     },
     getCurrentPage: (state) => {
         return state.currentPage;
@@ -105,6 +109,9 @@ const mutations = {
     },
     setFilterOrganization(state, value) {
         state.filter.organization = value;
+    },
+    setFilterId(state, value) {
+        state.filter.id = value;
     },
     setCurrentPage(state, value) {
         state.currentPage = value;
@@ -167,7 +174,7 @@ const actions = {
     },
     async loadFilteredVolunteers({commit, dispatch, rootState, state}) {
         commit('setIsLoading', true);
-        if (!state.filter.phone_number && !state.filter.tz_number && !state.filter.city_filter && !state.filter.areas && !state.filter.organization) {
+        if (!state.filter.phone_number && !state.filter.tz_number && !state.filter.city_filter && !state.filter.areas && !state.filter.organization && !state.filter.id) {
             dispatch('loadFirstPage');
             commit('setIsLoading', false);
             return;
@@ -180,7 +187,8 @@ const actions = {
                         tz_number: state.filter.tz_number,
                         city: state.filter.city_filter,
                         areas: state.filter.areas,
-                        organization: state.filter.organization
+                        organization: state.filter.organization,
+                        id: state.filter.id,
                     },
                     headers: {
                         Authorization: "Token " + rootState.hamalAuth.accessToken,
