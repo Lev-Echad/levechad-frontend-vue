@@ -166,8 +166,10 @@
     <v-data-table
       :headers="headers"
       :items="volunteers"
+      :items-per-page="getShownResultsCount"
       sort-by="created_date"
       sort-desc
+      dense
       class="table"
       single-select>
       <template v-slot:top>

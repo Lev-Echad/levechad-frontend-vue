@@ -100,8 +100,8 @@ const actions = {
     });
   },
 
-  checkToken({commit, rootState}){
-    commit("updateLogin", true) //first 
+  checkToken({commit, dispatch, rootState}){
+    commit("updateLogin", true) //first
      axios.get(rootState.baseAPIurl+"/api/volunteers/",{
       headers:{
         Authorization: "Token " + state.accessToken
@@ -113,6 +113,25 @@ const actions = {
     })
     .catch(err => {
       commit("updateLogin", false)
+    })
+  },
+  async checkToken2({commit, rootState}){
+    commit("updateLogin", true) //first
+    return new Promise((resolve, reject) => {
+      axios.get(rootState.baseAPIurl+"/api/volunteers/",{
+        headers:{
+          Authorization: "Token " + state.accessToken
+        }
+      } )
+      //if successful update local storage:
+      .then((response) => {
+        commit("updateLogin", true)
+        resolve(true)
+      })
+      .catch(err => {
+        commit("updateLogin", false)
+        reject(false)
+      })
     })
   },
 

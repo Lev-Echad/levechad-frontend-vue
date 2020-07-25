@@ -89,8 +89,14 @@ const getters = {
 
 const mutations = {
     setVolunteers(state, volunteers) {
-        // console.log(volunteers);
-        state.volunteers = volunteers;
+         console.log(volunteers);
+     //   state.volunteers.length = 0; // Clear contents
+     //   state.volunteers.push.apply(state.volunteers, volunteers); // Append new contents
+      //  state.volunteers = volunteers;
+        state.volunteers = {
+            ...state.volunteers,
+            ...volunteers,
+        };
     },
     setIsLoading(state, isLoading) {
         state.isLoading = isLoading;
@@ -155,22 +161,36 @@ const actions = {
 
     },
 
+    async reqLoadFirstPage({rootState}){
+        try {
+            let volunteers = await axios.get(`${rootState.baseAPIurl}/api/volunteers/`,
+                {
+                    headers: {
+                        Authorization: "Token " + rootState.hamalAuth.accessToken,
+                    },
+                })
+            return volunteers
 
-    loadFirstPage({commit, rootState}) {
-        commit('setIsLoading', true);
-        axios.get(`${rootState.baseAPIurl}/api/volunteers`,
-            {
-                headers: {
-                    Authorization: "Token " + rootState.hamalAuth.accessToken,
-                },
-            }).then(volunteers => {
-            commit('setVolunteers', volunteers.data);
-            commit('setCurrentPage', 1);
-            commit('setIsLoading', false);
-        }).catch(err=>{
+        } catch(err){
             console.log(err)
+        }
+    },
+    async loadFirstPage({commit,dispatch, rootState}) {
+        commit('setIsLoading', true);
+        try {
+
+            dispatch('reqLoadFirstPage').then((volunteers)=>{
+                commit('setVolunteers', volunteers.data);
+                commit('setCurrentPage', 1);
+                commit('setIsLoading', false);
+            })
+
+
+        } catch(err){
             commit('setIsLoading', false);
-        })
+            console.log(err)
+        }
+
     },
     async loadFilteredVolunteers({commit, dispatch, rootState, state}) {
         commit('setIsLoading', true);
