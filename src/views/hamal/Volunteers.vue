@@ -166,7 +166,8 @@
     <v-data-table
       :headers="headers"
       :items="volunteers"
-      sort-by="tz_number"
+      sort-by="created_date"
+      sort-desc
       class="table"
       single-select>
       <template v-slot:top>
@@ -234,6 +235,12 @@
         mdi-snowflake
       </v-icon>
     </template>
+      <template v-slot:item.created_date="{ item }">
+        <span class="text--caption">{{moment(item.created_date).format('DD/M/YY, h:mm')}}</span>
+      </template>
+      <template v-slot:item.date_of_birth="{ item }">
+        {{moment(item.date_of_birth).format('DD/M/YY')}}
+      </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="reset()">Reset</v-btn>
     </template>
@@ -270,6 +277,7 @@ export default {
         { text: "גיל", value: "age" },
         { text: "מין", value: "gender" },
         { text: "עיר", value: "city[name]" },
+        { text: "תאריך הרשמה", value: "created_date" },
         { text: "כתובת", value: "address" },
         { text: "חמל", value: "areas" },
         { text: 'ארגון', value: 'organization'},
