@@ -168,6 +168,7 @@ import Bdate from "./components/forms/Bdate";
 import { mapState, mapActions } from "vuex";
 
 export default {
+
   methods: {
     onSubmit() {
       if (this.formValid) {
@@ -267,6 +268,9 @@ export default {
       return (
         this.valid && this.cityValid && this.bDateValid && this.languagesValid
       );
+    },
+    serverLanguges(){
+      return this.$store.getters["api/getLanguages"];
     },
     createVolunteerFailed() {
       return this.$store.getters["api/getCreateVolunteerFailed"];
