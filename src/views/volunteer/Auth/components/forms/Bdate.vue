@@ -61,7 +61,7 @@
     computed:{
       maxDate(){
         let date1 = new Date()
-        date1.setFullYear(date1.getFullYear() -18)
+        date1.setFullYear(date1.getFullYear() -16)
         return date1.toISOString()
        // return new Date().toISOString().substr(0, 10)
      }

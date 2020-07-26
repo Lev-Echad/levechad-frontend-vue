@@ -7,7 +7,7 @@
         v-model="serach_id"
         :counter="10"
         :search-input.sync="serach_id"
-        label="id"
+        label="מס' משימה"
         required
       ></v-text-field>
     </v-col>
@@ -142,7 +142,7 @@ export default {
         lat: marker.location_latitude,
         lng: marker.location_longitude,
       };
-      let contentInfo = "<p> mission id </p><p>" + marker.id + "</p>";
+      let contentInfo = "<p> מס' משימה </p><p>" + marker.id + "</p>";
       this.infoOptions.content = contentInfo;
 
       //check if its the same marker that was selected if yes toggle
@@ -156,7 +156,7 @@ export default {
       }
     },
     getStatusIcon(status) {
-      let icon = "red_marker.png";
+      let icon = "blue_marker.png";
 
       switch (status) {
         case "התקבלה":
@@ -168,6 +168,7 @@ export default {
         case "הועבר למתנדב":
           icon = "green_marker.png";
           break;
+
       }
       return require("../../../assets/" + icon);
     },

@@ -44,20 +44,30 @@
     <div class="filter-section">
       <span>סנן לפי</span>
       <v-row>
-        <v-col cols="3">
+        <v-col cols="2">
           <v-text-field
-            v-model="tz_number"
-            label="תעודת זהות"
+            v-model="id"
+            label="מס' מתנדב"
             outlined
             append-icon="mdi-account-details"
             @keyup="onFilterChange()"
             @change="onFilterChange()"
           ></v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="2">
+          <v-text-field
+            v-model="tz_number"
+            label="תעודת זהות"
+            outlined
+            append-icon="mdi-numeric-9-box-multiple-outline"
+            @keyup="onFilterChange()"
+            @change="onFilterChange()"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
           <v-text-field
             v-model="phone_number"
-            label="טלפון"
+            label="נייד"
             outlined
             append-icon="mdi-phone"
             @keyup="onFilterChange()"
@@ -156,7 +166,10 @@
     <v-data-table
       :headers="headers"
       :items="volunteers"
-      sort-by="tz_number"
+      :items-per-page="getShownResultsCount"
+      sort-by="created_date"
+      sort-desc
+      dense
       class="table"
       single-select>
       <template v-slot:top>
@@ -224,6 +237,12 @@
         mdi-snowflake
       </v-icon>
     </template>
+      <template v-slot:item.created_date="{ item }">
+        <span class="text--caption">{{moment(item.created_date).format('DD/M/YY, h:mm')}}</span>
+      </template>
+      <template v-slot:item.date_of_birth="{ item }">
+        {{moment(item.date_of_birth).format('DD/M/YY')}}
+      </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="reset()">Reset</v-btn>
     </template>
@@ -251,6 +270,7 @@ export default {
       headers: [
         { text: 'עריכה', value: 'actions', sortable: false },
         { text: 'הקפאה', value: 'freeze', sortable: false },
+        { text: "מס' מתנדב'", value: "id" },
         { text: "תעודת זהות'", value: "tz_number" },
         { text: "שם פרטי", value: "first_name" },
         { text: "שם משפחה", value: "last_name" },
@@ -259,6 +279,7 @@ export default {
         { text: "גיל", value: "age" },
         { text: "מין", value: "gender" },
         { text: "עיר", value: "city[name]" },
+        { text: "תאריך הרשמה", value: "created_date" },
         { text: "כתובת", value: "address" },
         { text: "חמל", value: "areas" },
         { text: 'ארגון', value: 'organization'},
@@ -398,6 +419,7 @@ export default {
       "getFilterCity",
       "getFilterAreas",
       "getFilterOrganization",
+      "getFilterId",
       "getCurrentPage",
       "getNextPage",
       "getPreviousPage",
@@ -445,6 +467,14 @@ export default {
       },
       set(value) {
         this.$store.commit("hamalVolunteers/setFilterOrganization", value);
+      }
+    },
+    id: {
+      get() {
+        return this.getFilterId;
+      },
+      set(value) {
+        this.$store.commit("hamalVolunteers/setFilterId", value);
       }
     },
     dialogIsVisible: {

@@ -60,7 +60,7 @@ const state = {
   isLoading: false,
   createVolunteerFailed: false,
 
-
+  languages:[]
 };
 const getters = {
   getVolunteersList(state) {
@@ -99,7 +99,9 @@ const getters = {
   getVolunteerPage(state){
     return state.volunteerPage
   },
-
+  getLanguages(state){
+    return state.languages
+  }
 };
 
 const mutations = {
@@ -154,6 +156,10 @@ const mutations = {
   },
   setVolunteerPage(state, payload){
     state.volunteerPage.current = payload
+  },
+  setLanguages(state, payload){
+    state.languages.length = 0; // Clear contents
+    state.languages.push.apply(state.languages, payload); // Append ne
   }
   
 };
@@ -289,6 +295,24 @@ const actions = {
         console.log(err);
       });
   },
+  reqLanguages(context){
+      // made for volunteer sign-up form
+      // not in use. see TODO:
+      // TODO: remove the view requires authentication  https://github.com/Lev-Echad/levechad-backend/blob/master/API.md#apilanguages
+    axios
+      .get(
+        context.rootState.baseAPIurl +
+          "/api/languages"
+      )
+      .then((response) => {
+        context.commit("setLanguages", response.data);
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+
 
 
 };
