@@ -35,7 +35,7 @@
               </v-col>
               <v-col class="mx-1" cols="12">
                 <v-btn
-                  :to="{ name: 'VolunteerLogin' }"
+                  :to="{ name: 'VolunteerCard' }"
                   dark
                   color="success"
                 >
