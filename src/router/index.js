@@ -99,6 +99,12 @@ Vue.use(VueRouter)
           path: "VolunteerThankYou",
           component: () => import("@/views/volunteer/Auth/VolunteerThankYou")
       },
+        {
+            name: 'VolunteerCard',
+
+            path: "VolunteerCard",
+            component: () => import("@/views/volunteer/Auth/components/VolunteerCard")
+        },
 
     ]
   },

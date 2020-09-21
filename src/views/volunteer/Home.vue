@@ -14,7 +14,7 @@
           <v-btn
             class="success"
             tile
-            @click="navigateToFindCertificate()"
+            :to="{ name: 'VolunteerCard' }"
           >לחץ כאן להוצאת תג מתנדב בתוקף</v-btn>
         </v-col>
       </v-card>
@@ -54,7 +54,9 @@
 export default {
   methods: {
     navigateToFindCertificate() {
-      window.open("http://live.levechad.org/client/find_certificate");
+    //  window.open("http://live.levechad.org/client/find_certificate"); // to native certificate system
+    //  window.open("http://live.levechad.org/client/find_certificate"); // to generic certificate card
+
     }
   }
 };
