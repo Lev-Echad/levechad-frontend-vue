@@ -85,7 +85,6 @@
         value: false,
         items: [
           {title: "ביצוע שידוכים", icon: "mdi-handshake", to: "HamalMatch", color: "success"},
-          {title: "משימות פתוחות ואיתור מתנדבים", icon: "mdi-handshake", to: "HamalMarket", color: "success"},
           {title: "צפייה במשימות", icon: "mdi-bell-ring", to: "HamalMissions", color: "orange"},
           {title: "משימה חדשה", icon: "mdi-bell-plus", to: "Citizen", color: "orange"},
           {title: "מתנדבים", icon: "mdi-account", to: "HamalVolunteers", color: "info"},
