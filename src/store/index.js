@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import hamal from "./modules/hamal";
 import hamalAuth from "./modules/hamal-auth";
 import match from "./modules/match";
+import market from "./modules/market";
 import helpRequests from "./modules/help-requests";
 import api from "./modules/api";
 import hamalVolunteers from "./modules/hamal-volunteers";
@@ -72,6 +73,7 @@ export default new Vuex.Store({
     api,
     hamalAuth,
     match,
+    market,
     helpRequests,
     hamalVolunteers
   },
