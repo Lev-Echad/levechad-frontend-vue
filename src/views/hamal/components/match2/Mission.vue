@@ -2,46 +2,45 @@
   <v-row dense>
     <v-col  text-center cols="12">
       <v-card class="text-center white--text" :color="getStatusColor(focusedMission.status)">
-          <p class="ma-0"> משימה מספר {{ focusedMission.id }}  </p>
-          <strong>{{ focusedMission.status }}</strong>
+        <strong>{{ focusedMission.status }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
 
-      <v-card class="indigo lighten-2 text-center white--text">
+      <v-card class="primary lighten-2 text-center white--text">
         <strong>{{ focusedMission.full_name }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card class="indigo lighten-2 text-center white--text">
+      <v-card class="primary lighten-2 text-center white--text">
         <strong><span>{{moment(focusedMission.created_date).format('DD-MM-YY, h:mm')}}</span>
 </strong>
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card class="indigo lighten-2  text-center white--text">
+      <v-card class="primary lighten-2  text-center white--text">
         <strong v-if="focusedMission.city">עיר: {{
           focusedMission.city.name
         }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card class="indigo lighten-2  text-center white--text">
+      <v-card class="primary lighten-2  text-center white--text">
         <strong>סוג: {{ focusedMission.type }}</strong>
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card class="indigo lighten-2  text-center white--text">
+      <v-card class="primary lighten-2  text-center white--text">
         {{ focusedMission.phone_number }}
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card class="indigo lighten-2  text-center white--text">
+      <v-card class="primary lighten-2  text-center white--text">
         <p  class="ma-0 pa-0">כתובת: {{ focusedMission.address }}</p>
       </v-card>
     </v-col>
     <v-col cols="12">
-      <v-card class="indigo lighten-2  text-center white--text">
+      <v-card class="primary lighten-2  text-center white--text">
           <p class="ma-0 pa-0">פירוט בקשה</p>
           {{ focusedMission.type_text }}
       </v-card>
@@ -51,7 +50,6 @@
       <v-card class="info lighten-2  text-center white--text">
           <p  class="ma-0 pa-0"> מס׳ מתנדב: {{ focusedMission.helping_volunteer.id }}</p>
           <p  class="ma-0 pa-0" v-text="focusedMission.helping_volunteer.full_name"></p>
-          <p  class="ma-0 pa-0" v-text="focusedMission.helping_volunteer.phone_number"></p>
       </v-card>
     </v-col>
     <v-divider> </v-divider>
@@ -110,7 +108,7 @@ export default {
   computed: {
     focusedMission: {
       get() {
-        return this.$store.getters["market/currentHelpRequest"];
+        return this.$store.getters["match/focusedMissionDetails"];
       },
     },
       helpingVolunteerDetails(){
@@ -120,13 +118,12 @@ export default {
       return this.$store.getters["match/isLoading"];
     },
     HamalHelpRequestFields() {
-      return this.$store.getters["market/HamalHelpRequestFields"];
+      return this.$store.getters["match/HamalHelpRequestFields"];
     },
 
   },
 
   mounted(){
-  // this.$store.commit("market/currentHelpRequestHamalFields", this.focusedMission)
     // if(this.focusedMission.helping_volunteer){
     //     this.$store.dispatch("hamalVolunteers/reqVolunteerDetailsById", this.focusedMission.helping_volunteer.id)
     // }
@@ -134,7 +131,7 @@ export default {
   methods: {
 
     saveChanges() {
-      this.$store.dispatch("market/updateHelpRequest");
+      this.$store.dispatch("match/updateHelpRequest");
     },
     getStatusColor(status) {
       let color = "white";
