@@ -105,8 +105,8 @@
           <v-radio label="עד שעה" value="1"></v-radio>
           <v-radio label="1-3 שעות" value="3"></v-radio>
           <v-radio label="3-5 שעות" value="5"></v-radio>
-          <v-radio label="5-10 שעות" value="10"></v-radio>
-          <v-radio label="כמה שצריך" value="24"></v-radio>
+          <v-radio label="5-10 שעות" value="7"></v-radio>
+          <v-radio label="כמה שצריך" value="10"></v-radio>
         </v-radio-group>
       </div>
 
