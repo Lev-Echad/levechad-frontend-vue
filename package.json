@@ -1,10 +1,10 @@
 {
   "name": "lev-echad-corona",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "npx vue-cli-service build",
+    "build": "vue-cli-service build",
     "start": "vue-cli-service serve --mode production"
   },
   "dependencies": {
