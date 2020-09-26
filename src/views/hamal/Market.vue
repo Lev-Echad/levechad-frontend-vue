@@ -1,6 +1,6 @@
 <template>
   <span>
-    <v-container >
+    <v-container fluid >
       <v-row></v-row>
       <v-row dense>
         <v-col cols="12">
@@ -14,19 +14,11 @@
       <v-row dense>
         <v-col cols="12" lg="12">
           <MissiosTable/>
-        </v-col>
-
-
-        <v-col md="2">
-          <v-card class="px-3">
-            <v-row justify="center">
               <v-dialog fullscreen hide-overlay transition="dialog-bottom-transition" v-model="dialog">
-
                 <MissionDashboard />
               </v-dialog>
-            </v-row>
-          </v-card>
         </v-col>
+
       </v-row>
     </v-container>
     <h1 v-if="isLoading">טוען </h1>

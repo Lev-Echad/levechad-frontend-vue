@@ -136,7 +136,7 @@ const actions = {
   reqOpenHelpRequests(context) {
     context.commit("isLoading", true);
     axios
-    .get(context.rootState.baseAPIurl + "/api/helprequests/?status__in=IN_CARE,WAITING,TO_VOLUNTER&pageSize=60", {
+    .get(context.rootState.baseAPIurl + "/api/helprequests/?status__in=IN_CARE,WAITING,TO_VOLUNTER&pageSize=100", {
       headers: {
         Authorization: "Token " + context.rootState.hamalAuth.accessToken,
       },
@@ -291,7 +291,7 @@ const actions = {
     });
   },
 
-  async volunteerOneDayFreeze({commit, rootState, state}, payload) {
+  async volunteerFreeze({commit, rootState, state}, payload) {
     try {
       let volunteer = payload.volunteer
       let days_to_freeze = payload.days_to_freeze

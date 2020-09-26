@@ -4,80 +4,60 @@
             height="80%"
     >
         <v-card-title class="white--text orange darken-4">
-            משימות לטיפול
+            לחצו על משימה לצפייה במתנדבים פוטנציאלים
             <v-spacer></v-spacer>
             <v-text-field
                     append-icon="mdi-magnify"
                     hide-details
-                    label="חיפוש"
+                    label="חיפוש משימה"
                     single-line
-                    class="white--text "
-                    color="white"
+                    solo
                     v-model="search"
             ></v-text-field>
         </v-card-title>
 
-
-
-        <v-divider></v-divider>
-        <v-container
-                class="overflow-y-auto"
-                id="scroll-target"
-                style="max-height: 70%"
+        <v-data-table
+                :disable-pagination="true"
+                :headers="headers"
+                :items="open_missions"
+                :loading="isLoading"
+                :sort-by="['created_date']"
+                sort-desc
+                :search="search"
+                fixed-header
+                class="text-subtitle-2"
+                hide-default-footer
+                @click:row="selectMission"
         >
-            <v-row
-                    align="center"
-                    justify="center"
-                    style="max-height: 1000px"
-            >
-                <v-col cols="12">
 
+            <template v-slot:item.created_date="{ item }">
+                <span class="text--caption">{{moment(item.created_date).format('DD/MM, h:mm')}}</span>
+            </template>
+            <template v-slot:item.status="{ item }">
+                <v-chip v-text="item.status" :color="getStatusColor(item.status)"></v-chip>
 
-
-                <v-data-table
-                        :disable-pagination="true"
-                        :headers="headers"
-                        :items="open_missions"
-                        :loading="isLoading"
-                        :sort-by="['created_date']"
-                        sort-desc
-                        :search="search"
-                        fixed-header
-                        class="text-subtitle-2"
-                        hide-default-footer
-                        @click:row="selectMission"
-                >
-
-                    <template v-slot:item.created_date="{ item }">
-                        <span class="text--caption">{{moment(item.created_date).format('DD/MM, h:mm')}}</span>
-                    </template>
-                    <template v-slot:item.status="{ item }">
-                        <v-chip v-text="item.status" :color="getStatusColor(item.status)"></v-chip>
-
-                    </template>
-                    <template v-slot:item.helping_volunteer="{ item }">
+            </template>
+            <template v-slot:item.helping_volunteer="{ item }">
                         <span v-if="item.helping_volunteer">
                         <p class="text--caption ma-0">{{item.helping_volunteer.id}}</p>
                         <p class="text--caption ma-0">{{item.helping_volunteer.full_name}}</p>
                         <p class="text--caption ma-0">{{item.helping_volunteer.phone_number}}</p>
                         </span>
 
-                    </template>
+            </template>
 
-                    <template v-slot:item.actions="{ item }">
-                        <v-icon
-                                small
-                                class="mr-2"
-                                @click="selectMission(item)"
-                        >
-                            mdi-pencil
-                        </v-icon>
+            <template v-slot:item.actions="{ item }">
+                <v-icon
+                        small
+                        class="mr-2"
+                        @click="selectMission(item)"
+                >
+                    mdi-pencil
+                </v-icon>
 
-                    </template>
-                </v-data-table>
-                </v-col>
-            </v-row>
-        </v-container>
+            </template>
+        </v-data-table>
+
 
     </v-card>
 </template>
