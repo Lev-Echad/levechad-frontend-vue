@@ -68,11 +68,6 @@ Vue.use(VueRouter)
           component: () => import("@/views/hamal/Match")
       },
       {
-          name: 'HamalMarket',
-          path: "market",
-          component: () => import("@/views/hamal/Market")
-      },
-      {
           name: 'HamalMissions',
           path: "missions",
           component: () => import("@/views/hamal/Missions")
