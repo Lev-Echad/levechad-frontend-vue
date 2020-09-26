@@ -291,7 +291,7 @@ const actions = {
     });
   },
 
-  async volunteerOneDayFreeze({commit, rootState, state}, payload) {
+  async volunteerFreeze({commit, rootState, state}, payload) {
     try {
       let volunteer = payload.volunteer
       let days_to_freeze = payload.days_to_freeze

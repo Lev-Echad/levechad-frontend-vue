@@ -31,9 +31,9 @@
 
               <template v-slot:item.freeze="{ item }">
                 <div class="text--black">
-                  <v-btn color="primary" outlined x-small @click="freezeForDay(item)" >יום</v-btn>
-                  <v-btn color="primary" outlined x-small @click="freezeForWeek(item)" >שבוע</v-btn>
-                  <v-btn color="primary" outlined x-small @click="freezeForYear(item)" >שנה</v-btn>
+                  <v-btn color="primary" outlined x-small @click="freeze(item, 1)" >יום</v-btn>
+                  <v-btn color="primary" outlined x-small @click="freeze(item, 7)" >שבוע</v-btn>
+                  <v-btn color="primary" outlined x-small @click="freeze(item, 365)">שנה</v-btn>
                   <v-btn color="primary" outlined x-small @click="onVolunteerClick(item)" >בחירת תאריך</v-btn>
                 </div>
 
@@ -75,6 +75,23 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+      <v-snackbar
+              v-model="snackbar"
+              timeout="5000"
+      >
+          המתנדב הוקפא
+      <template v-slot:action="{ attrs }">
+        <v-btn
+                color="red"
+                text
+                v-bind="attrs"
+                @click="unFreeze()"
+        >
+          ביטול הקפאה
+        </v-btn>
+      </template>
+      </v-snackbar>
   </span>
 </template>
 
@@ -143,26 +160,26 @@
         this.$store.dispatch("hamalVolunteers/setVolunteerFreeze"); // freeze the volunteer
         this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
       },
-      freezeForDay(item){
-        this.$store.dispatch("market/volunteerOneDayFreeze", {
+
+      freeze(item, days_to_freeze){
+        this.$store.dispatch("market/volunteerFreeze", {
           'volunteer': item,
-          'days_to_freeze': 1
-        }); // freeze the volunteer
+          'days_to_freeze': days_to_freeze
+        });
         this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
+        this.freezed_item = item
+        this.days_to_freeze = days_to_freeze
+        this.snackbar=true
       },
-      freezeForWeek(item){
-        this.$store.dispatch("market/volunteerOneDayFreeze", {
-          'volunteer': item,
-          'days_to_freeze': 7
+      unFreeze(){
+        this.$store.dispatch("market/volunteerFreeze", {
+          'volunteer': this.freezed_item,
+          'days_to_freeze': -1
         });
         this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
       },
-      freezeForYear(item){
-        this.$store.dispatch("market/volunteerOneDayFreeze", {
-          'volunteer': item,
-          'days_to_freeze': 365
-        });
-        this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
+      openSnackBar(item, days_to_freeze){
+
       },
       clickVolunteer(item, row){
 
@@ -177,6 +194,9 @@
     data() {
       return {
         dateInput: false,
+        snackbar: false,
+        freezed_item: '',
+        days_to_freeze: 0,
         headers: [
           {text: "מס' מתנ'", value: "id"},
           {text: "שם", value: "full_name"},
