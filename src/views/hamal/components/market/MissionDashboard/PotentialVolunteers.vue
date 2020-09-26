@@ -32,8 +32,8 @@
               <template v-slot:item.freeze="{ item }">
                 <div class="text--black">
                   <v-btn color="primary" outlined x-small @click="freezeForDay(item)" >יום</v-btn>
-                  <v-btn color="primary" outlined x-small @click="freezeForDay(item)" >שבוע</v-btn>
-                  <v-btn color="primary" outlined x-small @click="freezeForDay(item)" >שנה</v-btn>
+                  <v-btn color="primary" outlined x-small @click="freezeForWeek(item)" >שבוע</v-btn>
+                  <v-btn color="primary" outlined x-small @click="freezeForYear(item)" >שנה</v-btn>
                   <v-btn color="primary" outlined x-small @click="onVolunteerClick(item)" >בחירת תאריך</v-btn>
                 </div>
 
