@@ -105,8 +105,8 @@
           <v-radio label="עד שעה" value="1"></v-radio>
           <v-radio label="1-3 שעות" value="3"></v-radio>
           <v-radio label="3-5 שעות" value="5"></v-radio>
-          <v-radio label="5-10 שעות" value="10"></v-radio>
-          <v-radio label="כמה שצריך" value="0"></v-radio>
+          <v-radio label="5-10 שעות" value="7"></v-radio>
+          <v-radio label="כמה שצריך" value="10"></v-radio>
         </v-radio-group>
       </div>
 
@@ -150,7 +150,7 @@
       color="red"
       v-if="isLoading"
     ></v-progress-circular>
-    <h4 class="red--text" v-if="createVolunteerFailed">אחד הפרטים שהנזתם לא תקין או שנרשתם כבר בעבר</h4>
+    <h4 class="red--text" v-if="createVolunteerFailed">תעודת הזהות מופיעה במערכת. פנה לחמ"ל במידה ולא נרשמת בעבר</h4>
   </div>
 </template>
 

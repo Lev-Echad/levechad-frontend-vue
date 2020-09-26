@@ -1,25 +1,43 @@
 <template>
   <span v-if="bestVolunteers">
-    <v-card height="650">
+    <v-card >
       <div>
         <v-data-table
                 :headers="headers"
                 :items="bestVolunteers"
+                item-key="id"
                 :items-per-page="20"
                 :loading="isLoading"
-                class="elevation-1"
-                dense=""
+                ref="dTable1"
+                class="elevation-1 black--text "
+
+                :single-select="true"
                 hide-default-footer
+                @click:row="clickVolunteer"
+
         >
+<!--          -->
+          <template v-slot:item.id="{ item }">
+            <span :class="item.id === currentVolunteer.id ? 'custom-highlight-row' : ''">
+              {{item.id}}
+            </span>
+          </template>
+            <template v-slot:item.phone_number="{ item }">
+            <span class="text-subtitle-2" v-text="prettyPhoneNumber(item.phone_number)">
+
+            </span>
+          </template>
+
 
               <template v-slot:item.freeze="{ item }">
-              <v-icon
-                      @click="onVolunteerClick(item)"
-                      class="mr-2"
-                      small
-              >
-                mdi-snowflake
-              </v-icon>
+                <div class="text--black">
+                  <v-btn color="primary" outlined x-small @click="freezeForDay(item)" >יום</v-btn>
+                  <v-btn color="primary" outlined x-small @click="freezeForDay(item)" >שבוע</v-btn>
+                  <v-btn color="primary" outlined x-small @click="freezeForDay(item)" >שנה</v-btn>
+                  <v-btn color="primary" outlined x-small @click="onVolunteerClick(item)" >בחירת תאריך</v-btn>
+                </div>
+
+
            </template>
         </v-data-table>
       </div>
@@ -62,12 +80,15 @@
 
 <script>
   export default {
+    mounted() {
+
+    },
     computed: {
       bestVolunteers() {
-        return this.$store.getters["match/bestVolunteers"];
+        return this.$store.getters["market/bestVolunteers"];
       },
       isLoading() {
-        return this.$store.getters["match/isLoading"];
+        return this.$store.getters["market/isLoading"];
       },
       getDialogVolunteer() {
         return this.$store.getters["hamalVolunteers/getDialogVolunteer"];
@@ -78,8 +99,8 @@
       getDialogIsVisible() {
         return this.$store.getters["hamalVolunteers/getDialogIsVisible"];
       },
-      focusedMissionId() {
-        return this.$store.getters["match/getFocusedMissionId"];
+      currentHelpRequest() {
+        return this.$store.getters["market/currentHelpRequest"];
       },
       dialogExpirationDate: {
         get() {
@@ -97,14 +118,21 @@
           this.$store.commit("hamalVolunteers/setDialogIsVisible", value);
         }
       },
+      currentVolunteer: {
+        get() {
+          return this.$store.getters["market/currentVolunteer"];
+        },
+        set(value) {
+          this.$store.commit("market/currentVolunteer", value);
+        }
+      },
     },
     methods: {
-      //delete
-      assignVol(volunteer_id) {
-        this.$store.dispatch("match/assignHelpRequestidToVol", {
-          volunteer_id: volunteer_id,
-        });
+      prettyPhoneNumber(phone_number){
+        var txt2 = phone_number.slice(0, 3) + "-" + phone_number.slice(3);
+        return txt2
       },
+
       onVolunteerClick(volunteer) {
         this.$store.dispatch("hamalVolunteers/openNewDialog", volunteer);
       },
@@ -113,21 +141,56 @@
       },
       setVolunteerFreeze() {
         this.$store.dispatch("hamalVolunteers/setVolunteerFreeze"); // freeze the volunteer
-        this.$store.dispatch("match/reqBestMatch", this.focusedMissionId); // get new list after the freeze
+        this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
       },
+      freezeForDay(item){
+        this.$store.dispatch("market/volunteerOneDayFreeze", {
+          'volunteer': item,
+          'days_to_freeze': 1
+        }); // freeze the volunteer
+        this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
+      },
+      freezeForWeek(item){
+        this.$store.dispatch("market/volunteerOneDayFreeze", {
+          'volunteer': item,
+          'days_to_freeze': 7
+        });
+        this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
+      },
+      freezeForYear(item){
+        this.$store.dispatch("market/volunteerOneDayFreeze", {
+          'volunteer': item,
+          'days_to_freeze': 365
+        });
+        this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
+      },
+      clickVolunteer(item, row){
+
+        this.currentVolunteer = item
+      }
     },
+    // watch:{
+    //   currentVolunteer(val){
+    //     this.selectedVol = val
+    //   }
+    // },
     data() {
       return {
         dateInput: false,
         headers: [
-          {text: "מס' מתנדב", value: "id"},
+          {text: "מס' מתנ'", value: "id"},
           {text: "שם", value: "full_name"},
           {text: "עיר", value: "city"},
           {text: "טל'", value: "phone_number"},
           {text: "התניידות", value: "moving_way"},
-          {text: 'הקפאה', value: 'freeze', sortable: false},
+          {text: 'מחיקת המתנדב למשך', value: 'freeze', sortable: false, color: 'red'},
         ],
       };
     },
   };
 </script>
+<style scoped>
+  .custom-highlight-row {
+    background: greenyellow;
+  }
+</style>
