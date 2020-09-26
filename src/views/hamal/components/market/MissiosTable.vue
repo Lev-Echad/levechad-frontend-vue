@@ -96,6 +96,7 @@
     methods: {
       selectMission(item) {
         this.$store.commit("market/currentHelpRequest", item);
+        this.$store.commit("market/currentVolunteer", '');
         this.$store.dispatch("market/reqBestMatch", item.id);
         this.$store.dispatch("market/getHelpRequestGeo", item.id);
       },
