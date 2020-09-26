@@ -23,9 +23,7 @@
                     :color="item.color"
                     :key="item.title"
                     :to="{ name: `${item.to}` }"
-                    class="ma-2"
-                    rounded
-                    large
+                    class="ma-1"
 
                     v-for="item in items"
             >
@@ -48,7 +46,7 @@
           </v-btn>
         </template>
 
-    <v-list>
+    <v-list dense>
       <v-list-item
               v-for="item in items"
               :key="item.title"
