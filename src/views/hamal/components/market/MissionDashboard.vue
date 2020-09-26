@@ -1,13 +1,20 @@
 <template>
+    <span>
+
+
+
+
     <v-card>
         <v-toolbar color="indigo" dark>
-            <v-btn @click='$store.commit("market/toggleDialog")' dark icon>
+            <v-btn @click='$store.commit("market/toggleDialog")' dark icon left>
                 <v-icon>mdi-close</v-icon>
             </v-btn>
-            <v-toolbar-title>משימה</v-toolbar-title>
         </v-toolbar>
-        <v-container fluid >
 
+
+
+
+        <v-container fluid >
             <v-row >
                 <v-col cols="12" md="2">
                     <MissionOps />
@@ -22,8 +29,8 @@
 
             </v-row>
         </v-container>
-
     </v-card>
+         </span>
 </template>
 
 <script>

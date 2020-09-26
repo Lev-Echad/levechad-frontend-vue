@@ -249,20 +249,6 @@ const actions = {
 
 
 
-  // reqGetOpenHelpRequests(context) {
-  //   axios
-  //     .get(context.rootState.baseAPIurl + "/api/maphelprequests/", {
-  //       headers: {
-  //         Authorization: "Token " + context.rootState.hamalAuth.accessToken,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // },
   reqGetAreas(context) {
     axios
       .get(context.rootState.baseAPIurl + "/api/areas/", {
