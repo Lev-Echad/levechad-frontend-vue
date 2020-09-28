@@ -5,7 +5,24 @@
     >
         <v-card-title class="white--text orange darken-4">
             לחצו על משימה לצפייה במתנדבים פוטנציאלים
+
+
             <v-spacer></v-spacer>
+            <v-chip class="ml-3 pl-3 m-12">
+                <download-excel
+                        :data="open_missions"
+                        name = "משימות פתוחות.xls"
+                        :fields ="excel_fields"
+                >
+                    יצוא לאקסל
+                    <v-icon
+                            small
+                            class="mr-2"
+                    >
+                        mdi-download
+                    </v-icon>
+                </download-excel>
+            </v-chip>
             <v-text-field
                     append-icon="mdi-magnify"
                     hide-details
@@ -83,6 +100,23 @@
           { text: 'איתור מתנדבים', value: 'actions', sortable: false },
 
         ],
+        excel_fields:{
+          "מספר משימה"  :"id" ,
+          "סטטוס"  :"status" ,
+          "שם מלא"  :"full_name" ,
+          "טלפון"  :"phone_number" ,
+          "עיר"  :"city.name" ,
+          "סוג עזרה"  :"type" ,
+          "כתובת"  :"address" ,
+          "תאריך"  :"created_date" ,
+          'בקשה'  :'type_text',
+          'מספר מתנדב': 'helping_volunteer.id',
+          'שם מתנדב': 'helping_volunteer.full_name',
+          'טלפון מתנדב': 'helping_volunteer.phone_number',
+          'חמליסט מטפל'  :'status_updater',
+          'הערת חמל'  :'notes',
+
+        },
       }
     },
     computed: {
