@@ -32,7 +32,12 @@
                     v-model="search"
             ></v-text-field>
         </v-card-title>
+        <v-card-subtitle class="white--text orange darken-4" >
+            <v-chip class="white--text red darken-4"><span> התקבלה:  </span><span>{{stats.waiting}}</span></v-chip>
+           | <v-chip class="white--text orange"> <span> בטיפול חמל:  </span><span>{{stats.in_care}}</span></v-chip>
+           | <v-chip class="white--text green"> <span> הועבר למתנדב:  </span><span>{{stats.to_volunteer}}</span></v-chip>
 
+        </v-card-subtitle>
         <v-data-table
                 :disable-pagination="true"
                 :headers="headers"
@@ -123,6 +128,9 @@
       isLoading() {
         return this.$store.getters["market/isLoading"];
       },
+      stats(){
+        return this.$store.getters["market/stats"];
+      }
 
     },
 

@@ -15,6 +15,11 @@ const state = {
   },
   bestVolunteers:[],
   dialog: false,
+  stats:{
+    'waiting': 0,
+    'in_care': 0,
+    'to_volunteer': 0,
+  }
 };
 const getters = {
   getOpenHelpRequests(state){
@@ -39,6 +44,9 @@ const getters = {
   currentVolunteer(state){
     return state.currentVolunteer
   },
+  stats(state){
+    return state.stats
+  }
 };
 
 const mutations = {
@@ -129,6 +137,30 @@ const mutations = {
     state.currentVolunteer = payload
   },
 
+  calculateStats(state){
+    let WAITING = 0
+    let IN_CARE = 0
+    let TO_VOLUNTEER = 0
+    let open_missions = state.openHelpRequests
+    for (let i in open_missions){
+      let status = open_missions[i].status
+      switch (status) {
+        case "התקבלה":
+          WAITING++;
+          break;
+        case "הועבר למתנדב":
+          TO_VOLUNTEER++;
+          break;
+        case "בטיפול":
+          IN_CARE++;
+          break;
+      }
+    }
+    state.stats.waiting = WAITING
+    state.stats.in_care = IN_CARE
+    state.stats.to_volunteer = TO_VOLUNTEER
+  },
+
 
 };
 const actions = {
@@ -148,6 +180,7 @@ const actions = {
         context.dispatch("reqOpenHelpRequestsNextPage", response.data.next)
       }
       else{
+        context.commit("calculateStats")
         context.commit("isLoading", false);
       }
 
@@ -171,6 +204,7 @@ const actions = {
         context.dispatch("reqOpenHelpRequestsNextPage", response.data.next)
       }
       else{
+        context.commit("calculateStats")
         context.commit("isLoading", false);
       }
 
