@@ -5,7 +5,24 @@
     >
         <v-card-title class="white--text orange darken-4">
             לחצו על משימה לצפייה במתנדבים פוטנציאלים
+
+
             <v-spacer></v-spacer>
+            <v-chip class="ml-3 pl-3 m-12">
+                <download-excel
+                        :data="open_missions"
+                        name = "משימות פתוחות.xls"
+                        :fields ="excel_fields"
+                >
+                    יצוא לאקסל
+                    <v-icon
+                            small
+                            class="mr-2"
+                    >
+                        mdi-download
+                    </v-icon>
+                </download-excel>
+            </v-chip>
             <v-text-field
                     append-icon="mdi-magnify"
                     hide-details
@@ -15,7 +32,12 @@
                     v-model="search"
             ></v-text-field>
         </v-card-title>
+        <v-card-subtitle class="white--text orange darken-4" >
+            <v-chip class="white--text red darken-4"><span> התקבלה:  </span><span>{{stats.waiting}}</span></v-chip>
+           | <v-chip class="white--text orange"> <span> בטיפול חמל:  </span><span>{{stats.in_care}}</span></v-chip>
+           | <v-chip class="white--text green"> <span> הועבר למתנדב:  </span><span>{{stats.to_volunteer}}</span></v-chip>
 
+        </v-card-subtitle>
         <v-data-table
                 :disable-pagination="true"
                 :headers="headers"
@@ -83,12 +105,32 @@
           { text: 'איתור מתנדבים', value: 'actions', sortable: false },
 
         ],
+        excel_fields:{
+          "מספר משימה"  :"id" ,
+          "סטטוס"  :"status" ,
+          "שם מלא"  :"full_name" ,
+          "טלפון"  :"phone_number" ,
+          "עיר"  :"city.name" ,
+          "סוג עזרה"  :"type" ,
+          "כתובת"  :"address" ,
+          "תאריך"  :"created_date" ,
+          'בקשה'  :'type_text',
+          'מספר מתנדב': 'helping_volunteer.id',
+          'שם מתנדב': 'helping_volunteer.full_name',
+          'טלפון מתנדב': 'helping_volunteer.phone_number',
+          'חמליסט מטפל'  :'status_updater',
+          'הערת חמל'  :'notes',
+
+        },
       }
     },
     computed: {
       isLoading() {
         return this.$store.getters["market/isLoading"];
       },
+      stats(){
+        return this.$store.getters["market/stats"];
+      }
 
     },
 
@@ -96,6 +138,7 @@
     methods: {
       selectMission(item) {
         this.$store.commit("market/currentHelpRequest", item);
+        this.$store.commit("market/currentVolunteer", '');
         this.$store.dispatch("market/reqBestMatch", item.id);
         this.$store.dispatch("market/getHelpRequestGeo", item.id);
       },
