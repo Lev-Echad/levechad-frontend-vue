@@ -41,7 +41,7 @@
                     :key="mission.id"
                     :animation="2"
                     :clickable="true"
-                    @click="toggleInfoWindow(mission)"
+                    @click="focusVolunteer(mission)"
                     :icon="getStatusIcon(mission.status)"
                     :position="{
           lat: mission.location_latitude,
@@ -61,7 +61,7 @@
             />
 
             <GmapMarker
-                    :animation="2"
+                    :animation="1"
                     :clickable="true"
                     v-if="currentVolunteer"
                     :icon="getCurrentVolunteerIcon(currentMission.status)"
@@ -91,7 +91,7 @@
       };
     },
     methods: {
-      toggleInfoWindow: function(marker, idx) {
+      focusVolunteer: function(marker, idx) {
         this.$store.commit("market/currentVolunteer", marker)
 
       },
