@@ -157,6 +157,7 @@
         this.$store.commit("hamalVolunteers/setDialogIsVisible", false);
       },
       setVolunteerFreeze() {
+        // @TODO: unfreeze for custom date
         this.$store.dispatch("hamalVolunteers/setVolunteerFreeze"); // freeze the volunteer
         this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
       },
@@ -172,11 +173,10 @@
         this.snackbar=true
       },
       unFreeze(){
-        this.$store.dispatch("market/volunteerFreeze", {
-          'volunteer': this.freezed_item,
-          'days_to_freeze': -1
-        });
-        this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
+        this.snackbar=false
+        this.$store.dispatch("market/volunteerUnfreeze", this.freezed_item.id);
+
+       // this.$store.dispatch("market/reqBestMatch", this.currentHelpRequest.id); // get new list after the freeze
       },
       openSnackBar(item, days_to_freeze){
 
