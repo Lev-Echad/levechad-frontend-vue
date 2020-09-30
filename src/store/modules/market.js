@@ -348,6 +348,24 @@ const actions = {
       console.log(err)
     }
   },
+  async volunteerUnfreeze({commit, rootState, state, dispatch}, volunteer_id) {
+    try {
+      const response = await axios.delete(`${rootState.baseAPIurl}/api//DisableVolunteerFreeze/${volunteer_id}/`,
+          {
+            headers: {
+              Authorization: "Token " + rootState.hamalAuth.accessToken,
+            }
+          }
+      ).then(()=>{
+        dispatch("reqBestMatch", state.currentHelpRequest.id)
+      })
+
+     // commit("currentVolunteer", '')
+
+    } catch (err) {
+      console.log(err)
+    }
+  },
 }
 
 
