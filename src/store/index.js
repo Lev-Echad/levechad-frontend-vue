@@ -16,15 +16,15 @@ export default new Vuex.Store({
     helpTypes: [
       {
         value: "BUYIN",
-        display_name: "קניות",
+        display_name: "ביצוע קניות למבודדים",
       },
       {
         value: "TRAVEL",
-        display_name: "איסוף",
+        display_name: "קבלת סל מזון",
       },
       {
         value: "MEDICI",
-        display_name: "תרופות",
+        display_name: "איסוף תרופות מבית מרקחת",
       },
       {
         value: "HOME_HEL",
