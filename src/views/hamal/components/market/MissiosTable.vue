@@ -53,7 +53,7 @@
         >
 
             <template v-slot:item.created_date="{ item }">
-                <span class="text--caption">{{moment(item.created_date).format('DD/MM, h:mm')}}</span>
+                <span class="text--caption">{{moment(item.created_date).format('DD/MM, HH:mm')}}</span>
             </template>
             <template v-slot:item.status="{ item }">
                 <v-chip v-text="item.status" :color="getStatusColor(item.status)"></v-chip>

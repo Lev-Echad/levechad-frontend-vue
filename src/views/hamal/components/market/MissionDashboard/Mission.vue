@@ -13,7 +13,7 @@
                 <v-list-item-icon>
                     <v-icon>mdi-calendar-clock</v-icon>
                 </v-list-item-icon>
-                <v-list-item-content class="caption">{{moment(focusedMission.created_date).format('DD/MM/YY, hh:mm')}}</v-list-item-content>
+                <v-list-item-content class="caption">{{moment(focusedMission.created_date).format('DD/MM/YY, HH:mm')}}</v-list-item-content>
             </v-list-item>
             <v-list-item class="px-1">
                 <v-list-item-icon>
