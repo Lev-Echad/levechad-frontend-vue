@@ -77,7 +77,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">ביטול</v-btn>
-              <v-btn color="blue darken-1" text @click="save">שמור</v-btn>
+              <v-btn color="blue darken-1" :disabled="editedItem.status == null" text @click="save">שמור</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
