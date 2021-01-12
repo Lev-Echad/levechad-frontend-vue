@@ -20,7 +20,7 @@ export default new Vuex.Store({
       },
       {
         value: "TRAVEL",
-        display_name: "קבלת סל מזון",
+        display_name: "שינוע והעברה של חולים",
       },
       {
         value: "MEDICI",
